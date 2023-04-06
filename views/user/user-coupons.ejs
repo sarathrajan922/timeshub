@@ -1,0 +1,77 @@
+<%- include('header-1') -%>
+
+<main class="main">
+
+
+
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html" rel="nofollow">Home</a>
+                <span></span> Shop
+                <span></span> Your Coupons
+            </div>
+        </div>
+    </div>
+
+    
+    <section class="mt-50 mb-50">
+
+        <div class="container">
+            <div class="row">
+                <% if (locals.result && locals.result.length > 0) { %>
+                <% for(let i = 0; i < locals.result.length; i++) { %>
+                <div class="col-6 my-2">
+ 
+                        <div class="coupon">                           
+                            <div class="coupon-details">
+                                <h2 class="coupon-title">Get <%= locals.result[i].percentage %>% off your order!</h2>
+                                <p class="coupon-desc"><%= locals.result[i].title %> : <%= locals.result[i].description %></p>
+                                <p class="coupon-validity">Valid until: <%= locals.result[i].exp %></p>
+                                <div class="coupon-code" id="coupon-code">
+                                    <% if( locals.result[i].used ) { %>
+                                        <span style="color: red; background-color: rgb(229, 236, 221);"> Redeemed!</span>
+                                        <% } else { %>
+                                            <span id="code-<%= locals.result[i].code %>"><%= locals.result[i].code %></span>
+                                            <a onclick="copyToClipboard('<%= locals.result[i].code %>')"> <span id="copy-<%= locals.result[i].code %>" style="background-color: rgb(235, 235, 227); color: black;" class="material-symbols-outlined">
+                                                content_copy
+                                              </span> </a>
+        
+                                              <span id="copied-<%= locals.result[i].code %>" style="display: none; background-color: rgb(230, 230, 216); color: rgb(26, 164, 38);" class="material-symbols-outlined">
+                                                content_paste
+                                                </span>
+                                                <small style="color: green;" id="copy-success-<%= locals.result[i].code %>"></small>
+
+                                        <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                    <% } else { %>
+                        <p>No coupons Available</p>
+                        <% } %> 
+                      
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<script src="https://kit.fontawesome.com/9d8a8e76c7.js" crossorigin="anonymous"></script>
+    
+<script>
+     function copyToClipboard(id) {
+            let couponCode = document.getElementById('code-'+id).innerText.trim();
+            navigator.clipboard.writeText(couponCode)
+                .then(() => {
+                    document.getElementById('copy-'+id).style.display = 'none'
+                    document.getElementById('copied-'+id).style.display  ='block'
+                    document.getElementById('copy-success-'+id).innerHTML = 'Copied!'
+                })
+                .catch((error) => {
+                    console.error(`Error copying coupon code: ${error}`);
+                });
+        }
+</script>
+<%- include('footer-1') -%>

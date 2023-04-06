@@ -1,11 +1,12 @@
 const MongoClient = require('mongodb').MongoClient
+const mongoDbUrl = process.env.MONGODB_URL
 
 const state ={
     db:null
 }
 
 module.exports.connect = (done)=>{
-    const url = 'mongodb://localhost:27017'
+    const url = mongoDbUrl
     const dbname =  'shop'
 
     MongoClient.connect(url, async(err,data)=>{

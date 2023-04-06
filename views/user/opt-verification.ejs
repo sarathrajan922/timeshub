@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OTP Verification</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+  <style>
+    .card {
+      margin: 50px auto;
+      max-width: 400px;
+      border-color: #4c6f7c;
+      border-radius: 10px;
+    }
+
+    .form-control-lg {
+      width: 60px;
+      height: 60px;
+      font-size: 32px;
+      text-align: center;
+      border-radius: .3rem;
+    }
+
+    .btn-primary {
+      background-color: #87ceeb;
+      border-color: #87ceeb;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-body ">
+        <div class="justify-content-center d-flex align-items-center">
+
+            <h4 class="card-title">Enter Your OTP Here</h4>
+        </div>
+      <p>Please enter the OTP sent to your phone number.</p>
+      <form action="/otpValidate" method="post">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control form-control-lg" placeholder="" aria-label="Verification code" name="otp" required>
+          <input type="text" class="form-control form-control-lg" placeholder="" aria-label="Verification code" name="otp" required>
+          <input type="text" class="form-control form-control-lg" placeholder="" aria-label="Verification code" name="otp" required>
+          <input type="text" class="form-control form-control-lg" placeholder="" aria-label="Verification code" name="otp" required>
+        </div>
+        <div class="justify-content-center d-flex align-items-center">
+            <button type="submit" class="btn btn-primary btn-lg ">Verify</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.min.js"></script>
+</body>
+</html>

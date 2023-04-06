@@ -1,0 +1,68 @@
+form#coupon-form {
+    display: flex;
+    align-items: center;
+  }
+  
+  input[type="text"] {
+    width: 60%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  select {
+    width: 40%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.8 10.6l4.6 4.6c.2.2.5.2.7 0l4.6-4.6c.2-.2.1-.5-.2-.7l-1.4-1.4c-.2-.2-.5-.2-.7 0L12 12.5l-3.3-3.3c-.2-.2-.5-.2-.7 0l-1.4 1.4c-.3.3-.4.6-.2.8z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position-x: 97%;
+    background-position-y: 50%;
+  }
+  
+  .coupon-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    font-weight: bold;
+  }
+  
+  .percentage {
+    background-color: #ffcc00;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+
+  select {
+    /* existing styles here... */
+    
+    background-position-x: 100%;
+  }
+  
+  option {
+    font-size: 16px;
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    color: #333;
+    border-top: 1px solid #ccc;
+    transition: all 0.2s ease-in-out;
+    color: rgb(94, 170, 185);
+  }
+  
+  option:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
+  }

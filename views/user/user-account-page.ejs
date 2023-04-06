@@ -1,0 +1,987 @@
+<%- include('header-1') -%>
+
+
+    <main class="main">
+      <div class="page-header breadcrumb-wrap">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="index.html" rel="nofollow">Home</a>
+            <span></span> Pages <span></span> Account
+          </div>
+        </div>
+      </div>
+
+      <section class="pt-20 pb-150">
+        <!-- profile picture -->
+        <div class="container mt-1">
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-7">
+              <div class="card p-3 py-4">
+                <div class="text-center">
+                  <img
+                    src="https://i.imgur.com/bDLhJiP.jpg"
+                    width="100"
+                    class="rounded-circle"
+                  />
+                </div>
+
+                <div class="text-center mt-3">
+                  <a href="#account-detail">
+                    <span class="bg-secondary p-1 px-4 rounded text-white"
+                      >Edit Profile</span
+                    ></a
+                  >
+                  <h5 class="mt-2 mb-0" id="userName3">
+                    <%= userData[0].name %>
+                  </h5>
+                  <!-- <span>------</span>    -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container mt-50">
+          <div class="row">
+            <div class="col-lg-10 m-auto">
+              <div class="row">
+                <!-- dashboard order address account details logout -->
+                <div class="col-md-4">
+                  <div class="dashboard-menu">
+                    <ul class="nav flex-column" role="tablist">
+                      <li class="nav-item">
+                        <a
+                          class="nav-link active"
+                          id="dashboard-tab"
+                          data-bs-toggle="tab"
+                          href="#dashboard"
+                          role="tab"
+                          aria-controls="dashboard"
+                          aria-selected="false"
+                          ><i class="fi-rs-settings-sliders mr-10"></i
+                          >Dashboard</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a
+                          class="nav-link"
+                          id="orders-tab"
+                          data-bs-toggle="tab"
+                          href="#orders"
+                          role="tab"
+                          aria-controls="orders"
+                          aria-selected="false"
+                          ><i class="fi-rs-shopping-bag mr-10"></i>Orders</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a
+                          class="nav-link"
+                          id="track-orders-tab"
+                          data-bs-toggle="tab"
+                          href="#track-orders"
+                          role="tab"
+                          aria-controls="track-orders"
+                          aria-selected="false"
+                          ><i class="fi-rs-shopping-cart-check mr-10"></i>Track
+                          Your Order</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a
+                          class="nav-link"
+                          id="address-tab"
+                          data-bs-toggle="tab"
+                          href="#address"
+                          role="tab"
+                          aria-controls="address"
+                          aria-selected="true"
+                          ><i class="fi-rs-marker mr-10"></i>My Address</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a
+                          class="nav-link"
+                          id="account-detail-tab"
+                          data-bs-toggle="tab"
+                          href="#account-detail"
+                          role="tab"
+                          aria-controls="account-detail"
+                          aria-selected="true"
+                          ><i class="fi-rs-user mr-10"></i>Account details</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/user-logout"
+                          ><i class="fi-rs-sign-out mr-10"></i>Logout</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-md-8">
+                  <div class="tab-content dashboard-content">
+                    <!-- dashboard -->
+                    <div
+                      class="tab-pane fade active show"
+                      id="dashboard"
+                      role="tabpanel"
+                      aria-labelledby="dashboard-tab"
+                    >
+                      <div class="card">
+                        <div class="card-header">
+                          <h5 class="mb-0" id="userName2">
+                            Hello <%= userData[0].name %>!
+                          </h5>
+                        </div>
+                        <div class="card-body">
+                          <p>
+                            From your account dashboard. you can easily check
+                            &amp; view your <a href="#">recent orders</a>,
+                            manage your
+                            <a href="#">shipping and billing addresses</a> and
+                            <a href="#"
+                              >edit your password and account details.</a
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- your orders -->
+                   
+                   
+                   
+                   
+                    <div
+                      class="tab-pane fade"
+                      id="orders"
+                      role="tabpanel"
+                      aria-labelledby="orders-tab"
+                    >
+                      <div class="card">
+                        <div class="card-header">
+                          <h5 class="mb-0">Your Orders</h5>
+                        </div>
+                        
+                        <!-- orders table -->
+                        <div class="card-body" id="card-ids">
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Order</th>
+                                  <th>Date</th>
+                                  <th>Status</th>
+                                  <th>Total</th>
+                                  <th>Details</th>
+                                  <th>Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% let count = 1 %>
+                                <% for (let i = orderDetails.length-1 ; i >= 0  ;
+                                i--) { %>
+                                 
+                                <tr>
+                                  <td style="font-size: 0.8rem">
+                                    #0<%= count++ %>
+                                  </td>
+                                  <td style="font-size: 0.8rem">
+                                    <%= locals.orderDetails[i].date %>
+                                  </td>
+
+                                  <% if (orderDetails.status === 'cancelled') {
+                                  %>
+                                  <td style="font-size: 0.8rem">
+                                    <span
+                                      class="badge rounded-pill alert-warning"
+                                      ><%= locals.orderDetails[i].status
+                                      %></span
+                                    >
+                                  </td>
+                                  <% } else { %>
+                                  <td style="font-size: 0.8rem">
+                                    <span
+                                      class="badge rounded-pill alert-success"
+                                      id="<%= locals.orderDetails[i]._id %>"
+                                      ><%= locals.orderDetails[i].status
+                                      %></span
+                                    >
+                                  </td>
+                                  <% } %>
+
+                                  <td style="font-size: 0.8rem">
+                                    <%= locals.ordertotal[i] %> for <%=
+                                    locals.orderDetails[i].items %> item
+                                  </td>
+                                  <td style="font-size: 0.8rem">
+                                    <a
+                                      onclick="getDetails('<%= locals.orderDetails[i]._id %>')"
+                                      class="bg-success px-2 rounded text-white"
+                                      id="<%= locals.orderDetails[i]._id %>"
+                                      >Details</a
+                                    >
+                                  </td>
+
+                                  <td style="font-size: 0.8rem">
+                                    <a
+                                      onclick="deleteOrder('<%= locals.orderDetails[i]._id %>')"
+                                      class="bg-danger px-2 rounded text-white"
+                                      id="<%= locals.orderDetails[i]._id %>"
+                                      >cancel</a
+                                    >
+                                  </td>
+                                 
+
+
+
+                                
+
+                                </tr>
+                                <% } %>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+
+                        <!-- //new div -->
+
+
+                        <div class="card-body" style="display: none;" id="orderDetails" >
+
+                          <!-- order date -->
+
+                          <div class="card">
+                            <div class="card-body">Date: <span id="user-order-date"></span>
+                              <div class=" float-end">
+                                <a
+                                      onclick="hideDetails()"
+                                      class="bg-success px-2 rounded text-white"
+                                      id=""
+                                      >back</a
+                                    >
+                              </div>
+                              <br>
+                              <span>Order Id: <span id="user-order-id"></span></span>
+                              
+                              
+                            </div>
+                          </div>
+
+                         
+                       
+                        
+                      <!-- order info -->
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title">order info</h5>
+                               <p>Shipping: Fargo Express</p>
+                              <p class="card-text">Payment Method: <span id="payMETHOD"></span></p>
+                              <p>Status : <span id="paySTATUS"></span></p>
+                              <a onclick="invoice()" style="color: rgb(41, 129, 211);">Download Order Details</a>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                      <!-- delivery address -->
+                  <div class="col-sm-6">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">Deliver to</h5>
+                        <p class="card-text">City: <span id="Address-area"></span>,<span id="Address-state"></span></p>
+                        <p><span id="Address-AddLine1"></span>,<span id="Address-AddLine2"></span></p>
+                        <p><span id="Address-pincode"></span>,<span id="Address-type"></span></p>
+                        <a href="#" style="color: rgb(41, 129, 211);">view profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                                      
+                         
+
+
+                       
+
+
+                      <article class="float-end">
+                      
+
+                        <div class="card" style="width: 18rem;">
+                          <ul class="list-group list-group-light">
+                            <li class="list-group-item px-3 ">SubTotal: <span id="order-subtotal"></span> </li>
+                            <li class="list-group-item px-3">Shipping Cost: <span id="order-shipping-cost">₹ 00.0</span> </li>
+                            <li class="list-group-item px-3">Grand Total: <span style="font-size: x-large;" id="order-grandtotal"></span> </li>
+                            <li class="list-group-item px-3">Status:<span class="badge rounded-pill alert-success text-success" id="order-status"></span></li>
+                            <li id="return-btn" style="display: none;" onclick="returnRequest()" class="list-group-item px-3 btn btn-warning">retrun</li>
+                          <li><span style="color: rgb(69, 246, 69);" id="request-status"></span></li>
+                          </ul>
+
+                        </div>
+                    </article>
+
+
+
+
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- order details page -->
+
+
+
+
+
+                    <!-- order tracking -->
+                    <div
+                      class="tab-pane fade"
+                      id="track-orders"
+                      role="tabpanel"
+                      aria-labelledby="track-orders-tab"
+                    >
+                      <div class="card">
+                        <div class="card-header">
+                          <h5 class="mb-0">Orders tracking</h5>
+                        </div>
+                        <div class="card-body contact-from-area">
+                          <p>
+                            To track your order please enter your OrderID in the
+                            box below and press "Track" button. This was given
+                            to you on your receipt and in the confirmation email
+                            you should have received.
+                          </p>
+                          <div class="row">
+                            <div class="col-lg-8">
+                              <form
+                                class="contact-form-style mt-30 mb-50"
+                                action="#"
+                                method="post"
+                              >
+                                <div class="input-style mb-20">
+                                  <label>Order ID</label>
+                                  <input
+                                    name="order-id"
+                                    placeholder="Found in your order confirmation email"
+                                    type="text"
+                                    class="square"
+                                  />
+                                </div>
+                                <div class="input-style mb-20">
+                                  <label>Billing email</label>
+                                  <input
+                                    name="billing-email"
+                                    placeholder="Email you used during checkout"
+                                    type="email"
+                                    class="square"
+                                  />
+                                </div>
+                                <button
+                                  class="submit submit-auto-width"
+                                  type="submit"
+                                >
+                                  Track
+                                </button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- MY Address billing address and shiping address-->
+                    <div
+                      class="tab-pane fade"
+                      id="address"
+                      role="tabpanel"
+                      aria-labelledby="address-tab"
+                    >
+                      <div class="row">
+                        <div class="accordion" id="accordionExample">
+                          <div
+                            class="accordion-item border border-danger rounded"
+                          >
+                            <h5 class="accordion-header" id="headingOne">
+                              <button
+                                class="accordion-button bg-primary text-white btn-sm"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne"
+                                aria-expanded="true"
+                                aria-controls="collapseOne"
+                              >
+                                Add New Address
+                              </button>
+                            </h5>
+
+                            <div
+                              id="collapseOne"
+                              class="accordion-collapse collapse mt-2"
+                              aria-labelledby="headingOne"
+                              data-bs-parent="#accordionExample"
+                            >
+                              <div class="accordion-body">
+                                <!-- address editing form -->
+                                <div class="py-5">
+                                  <div
+                                    class="d-flex justify-content-between align-items-center mb-3"
+                                  >
+                                    <h4 class="text-right">Profile Settings</h4>
+                                  </div>
+
+                                  <!-- address adding form -->
+                                  <form action="/address-add?from=Home" method="post">
+                                    <div class="row mt-2">
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Name</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="first name"
+                                          name="name"
+                                        />
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Surname</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          value=""
+                                          placeholder="surname"
+                                          name="surname"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Mobile Number</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="phone number"
+                                          name="mobile"
+                                        />
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Email ID</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Email id"
+                                          name="email"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Address Line 1</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Address line 1"
+                                          value=""
+                                          name="addressLine1"
+                                        />
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Address Line 2</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Address line 2"
+                                          value=""
+                                          name="addressLine2"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Pincode</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Pincode"
+                                          value=""
+                                          name="pincode"
+                                        />
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Area</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="Area"
+                                          value=""
+                                          name="area"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >Country</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          placeholder="country"
+                                          value=""
+                                          name="country"
+                                        />
+                                      </div>
+                                      <div class="col-md-6">
+                                        <label class="labels fw-bold"
+                                          >State/Region</label
+                                        ><input
+                                          type="text"
+                                          class="form-control"
+                                          value=""
+                                          placeholder="state"
+                                          name="state"
+                                        />
+                                      </div>
+                                      <div
+                                        class="btn-group btn-sm"
+                                        role="group"
+                                        aria-label="Basic radio toggle button group"
+                                      >
+                                        <input
+                                          type="radio"
+                                          class="btn-check"
+                                          name="type"
+                                          id="btnradio1"
+                                          autocomplete="off"
+                                          checked
+                                          value="Work"
+                                        />
+                                        <label
+                                          class="btn btn-outline-primary btn-sm"
+                                          for="btnradio1"
+                                          >Work</label
+                                        >
+
+                                        <input
+                                          type="radio"
+                                          class="btn-check"
+                                          name="type"
+                                          id="btnradio2"
+                                          autocomplete="off"
+                                          value="Home"
+                                        />
+                                        <label
+                                          class="btn btn-outline-primary btn-sm"
+                                          for="btnradio2"
+                                          >Home</label
+                                        >
+                                      </div>
+                                    </div>
+
+                                    <div class="mt-5 text-center">
+                                      <button
+                                        class="btn btn-primary profile-button"
+                                        type="submit"
+                                      >
+                                        Save Address
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- billing address -->
+
+                        <% for (var i = 0; i < address.length; i++) { %>
+                        <div class="col-lg-6 mt-4">
+                          <div class="card mb-3 mb-lg-0">
+                            <div class="card-header">
+                              <h5 class="mb-0">
+                                <%= locals.address[i].type %>
+                              </h5>
+                            </div>
+                            <div class="card-body">
+                              <address>
+                                <%= locals.address[i].name %> &nbsp; <%=
+                                locals.address[i].surname %>, <br /><%=
+                                locals.address[i].addressLine1 %>, <%=
+                                locals.address[i].addressLine2 %> <br /><%=
+                                locals.address[i].email %> <br />
+                                <%= locals.address[i].state %>, <%=
+                                locals.address[i].area %> , <%=
+                                locals.address[i].pincode %> <br />
+                                <%= locals.address[i].mobile %> <br />
+                              </address>
+                              <p><%= locals.address[i].country %></p>
+
+                              <!-- <a href="#" class="btn-small">Edit</a> -->
+
+                              <a href="#">
+                                <div
+                                  class="badge bg-success text-wrap"
+                                  style="width: 8rem"
+                                >
+                                  Edit
+                                </div>
+                              </a>
+                              <a
+                                href="/address-delete/<%= locals.address[i]._id %>"
+                              >
+                                <div
+                                  class="badge bg-success text-wrap"
+                                  style="width: 8rem"
+                                >
+                                  Delete
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+
+                        <% } %>
+
+                        <!-- shiping address -->
+                      </div>
+                    </div>
+
+                    <!-- account details and address edit  -->
+                    <div
+                      class="tab-pane fade"
+                      id="account-detail"
+                      role="tabpanel"
+                      aria-labelledby="account-detail-tab"
+                    >
+                      <div class="card">
+                        <div class="card-header">
+                          <h5>Account Details</h5>
+                        </div>
+                        <div class="card-body">
+                          <!-- <p>Already have an account? <a href="page-login-register.html">Log in instead!</a></p> -->
+                          <!-- <form method="post" name="enq"> -->
+                          <div class="row">
+                            <div class="form-group col-md-6">
+                              <label>
+                                Name <span class="required">*</span></label
+                              >
+                              <h5 id="userName1"><%= userData[0].name %></h5>
+                            </div>
+                            <div class="form-group col-md-6 pt-3">
+                              <a
+                                style="font-size: 0.8rem"
+                                onclick="changeUserName('<%= userData[0]._id %>')"
+                                class="bg-success px-4 text-white"
+                                id=""
+                                >Change</a
+                              >
+                            </div>
+
+                            <div class="form-group col-md-6">
+                              <label
+                                >Email Address
+                                <span class="required">*</span></label
+                              >
+                              <h5><%= userData[0].email %></h5>
+                            </div>
+                            <div class="form-group col-md-6 pt-3">
+                              <a
+                                style="font-size: 0.8rem"
+                                onclick="changeUserEmail('<%= userData[0]._id %>')"
+                                class="bg-success px-4 text-white"
+                                id=""
+                                >Change
+                              </a>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                              <label
+                                >Password <span class="required">*</span></label
+                              >
+                              <h5>*******</h5>
+                            </div>
+                            <div class="form-group col-md-6 pt-3">
+                              <a
+                                style="font-size: 0.8rem"
+                                onclick="changeUserPassword()"
+                                class="bg-success px-4 text-white"
+                                id=""
+                                >Change</a
+                              >
+                            </div>
+                            <!-- <div class="form-group col-md-12">
+                                                            <label>Confirm Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="cpassword" type="password">
+                                                        </div> -->
+                            <!-- <div class="col-md-12">
+                                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                                        </div> -->
+                          </div>
+                          <!-- </form> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- modal -->
+
+        <!-- modal end -->
+      </section>
+    </main>
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  
+function changeUserName(id) {
+  swal({
+    title: "Change UserName",
+    text: "",
+    content: "input",
+    buttons: true,
+    dangerMode: false,
+  }).then((value) => {
+    if (value) {
+      swal(`Your Name changed to : ${value}`, {
+        icon: "success",
+      }).then(() => {
+        // call ajax function here
+        NameChange(id, value);
+      });
+    } else {
+      swal("Your Name doesn't change!");
+    }
+  });
+}
+
+function NameChange(id, newName) {
+  $.ajax({
+    url: "/user-change-name",
+    method: "post",
+    data: {
+      id,
+      newName,
+    },
+    success: (response) => {
+      let text1 = "Hello";
+      let text3 = "!";
+      let text2 = toString(newName);
+      let result = text1.concat(" ", text2, "", text3);
+      console.log(result);
+      if (response.status) {
+        document.getElementById("userName1").innerHTML = newName;
+        document.getElementById("userName2").innerHTML = result;
+        document.getElementById("userName3").innerHTML = newName;
+      }
+    },
+  });
+}
+
+function changeUserEmail(id) {
+  swal({
+    title: "Change Email",
+    text: "",
+    content: "input",
+    buttons: true,
+    dangerMode: false,
+  }).then((value) => {
+    if (value) {
+      swal(`Your Email changed to: ${value}`, {
+        icon: "success",
+      }).then(() => {
+        // call ajax function here
+      });
+    } else {
+      swal("Your Email doesn't change!");
+    }
+  });
+}
+
+function changeUserPassword() {
+  swal("Write something here:", {
+    content: "input",
+  }).then((value) => {
+    swal(`You typed: ${value}`);
+  });
+}
+
+
+
+function deleteOrder(id) {
+  swal({
+    title: "Are you sure?",
+    text: "Once deleted, you will not be able to recover this order details!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+    
+     
+      swal("Poof! Your order has been cancelled!", {
+        icon: "success",
+      }).then(() => {
+        orderCancel(id);
+      });
+    } else {
+      swal("Your order is safe!");
+    }
+  });
+}
+
+
+
+
+
+function orderCancel(id) {
+  $.ajax({
+    url: "/order-cancel",
+    type: "post",
+    data: {
+      orderId: id, 
+    },
+    success: (response) => {
+      if (response.status) {
+        document.getElementById(id).innerHTML = "cancelled";
+      }
+    },
+  });
+}
+
+
+
+function getDetails(id){
+   this.orderId = id
+  document.getElementById('card-ids').style.display= 'none'
+  document.getElementById('orderDetails').style.display  = 'block'
+
+ 
+  
+  // ajax call
+
+  $.ajax({
+    url: `/view-orderDetails/${id}`,
+    method: 'get',
+    success: (response)=>{
+
+
+    console.log('user viewed order Details')
+      console.log(response.product)
+      console.log(response.addressDetails)
+      console.log(response.orderDet)
+      //  order info
+      document.getElementById('payMETHOD').innerHTML = response.orderDet[0].paymentMethod
+      document.getElementById('paySTATUS').innerHTML = response.orderDet[0].status
+       
+      // delivery to 
+       document.getElementById('Address-area').innerHTML = response.addressDetails[0].area
+       document.getElementById('Address-state').innerHTML = response.addressDetails[0].state
+       document.getElementById('Address-AddLine1').innerHTML = response.addressDetails[0].addressLine1
+       document.getElementById('Address-AddLine2').innerHTML = response.addressDetails[0].addressLine2
+       document.getElementById('Address-pincode').innerHTML = response.addressDetails[0].pincode
+       document.getElementById('Address-type').innerHTML = response.addressDetails[0].type
+
+      
+       document.getElementById('user-order-id').innerHTML = response.orderDet[0]._id
+       document.getElementById('user-order-date').innerHTML = response.orderDet[0].date
+
+       //retun button
+       if(response.orderDet[0].status === 'Completed'){
+         document.getElementById('return-btn').style.display = 'block'
+       }else{
+        document.getElementById('return-btn').style.display = 'none'
+       }
+
+       let india = new Intl.NumberFormat("en-IN",{
+          style: 'currency',
+          currency: 'INR'
+        })
+        this.grandTotal = response.orderDet[0].total
+        let total = india.format(response.orderDet[0].total)
+       document.getElementById('order-subtotal').innerHTML = total
+       document.getElementById('order-grandtotal').innerHTML = total
+     
+       document.getElementById('order-status').innerHTML = response.orderDet[0].status
+    }
+
+    
+
+  })
+
+
+
+
+
+
+  
+}
+
+
+
+function returnRequest(){
+
+    console.log(this.orderId)
+    console.log('return request success')
+
+    $.ajax({
+      url: '/refundRequest',
+      method: 'post',
+      data: {
+        orderId : this.orderId,
+        amount: this.grandTotal
+      },
+      success : (response)=>{
+        if(response.status){
+          document.getElementById('return-btn').style.display = 'none'
+          document.getElementById('request-status').innerHTML = 'Request Send Successfuly'
+        }
+      }
+    })
+  }
+
+
+
+
+function invoice(){
+  const orderId = document.getElementById('user-order-id').innerHTML
+        console.log(orderId);
+        generateSalesReport('pdf', orderId )
+
+ }
+
+
+ function hideDetails(){
+  document.getElementById('card-ids').style.display = 'block'
+  document.getElementById('orderDetails').style.display = 'none'
+}
+
+
+
+</script>
+
+<%- include('footer-1') -%>
