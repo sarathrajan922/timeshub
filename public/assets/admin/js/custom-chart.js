@@ -7,9 +7,11 @@
       sales,
       products,
       visitors,
-      orderStat,
+      orderStatitics,
       paymentStat
     } = data
+
+    const orderStat =  Object.values(orderStatitics[0])
 
     console.log(sales)
   
@@ -46,7 +48,7 @@
               fill: true,
               backgroundColor: "rgba(44, 120, 220, 0.2)",
               borderColor: "rgba(44, 120, 220)",
-              data: sales.value,
+              data: sales,
             },
             {
               label: "Visitors",
@@ -90,12 +92,11 @@
       // const chartData = $("#chartData").val().split(",")
       const labels = [
         "Placed",
-        "Confirmed",
         "Shipped",
         "Delivery",
         "Completed",
         "Cancelled",
-        "Returned",
+        "Pending",
       ] // example labels
   
       const chart = new Chart(ctx, {
@@ -107,13 +108,13 @@
             {
               label: "My Dataset",
               backgroundColor: [
-                "rgba(23, 162, 82, 0.8)", // dark green
                 "rgba(54, 162, 235, 0.8)", // blue
-                "rgba(255, 206, 86, 0.8)", // yellow
                 "rgba(75, 192, 192, 0.8)", // green
-                "rgba(153, 102, 255, 0.8)", // purple
-                "rgba(255, 240, 0, 0.8)", // dark yellow
+                "rgba(255, 206, 86, 0.8)", // yellow
+                "rgba(23, 162, 82, 0.8)", // dark green
+                
                 "rgba(204, 0, 0, 0.8)", // dark red
+                "rgba(153, 102, 255, 0.8)", // purple
               ],
               data: orderStat,
             },

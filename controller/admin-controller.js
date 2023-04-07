@@ -25,16 +25,28 @@ module.exports = {
   adminHome: async (req, res, next) => {
     try{
       const { email, password } = req.body;
-      let result = await adminHelpers.adminLogin(email)
-        if (!result) {
-          console.log("email not exist");
-          res.redirect("/admin");
-        } else {
-          if (result[0]?.email === email && result[0]?.password === password) {
-            req.session.admin = true;
-            res.redirect("/admin/dashboard");
-          }
-        }
+
+      const AdminEmail = process.env.ADMIN_EMAIL
+      const AdminPassword = process.env.ADMIN_PASSWORD
+
+      if(AdminEmail === email && AdminPassword === password){
+        req.session.admin = true;
+        res.redirect("/admin/dashboard");
+      }else{
+        res.redirect("/admin");
+      }
+
+
+      // let result = await adminHelpers.adminLogin(email)
+      //   if (!result) {
+      //     console.log("email not exist");
+      //     res.redirect("/admin");
+      //   } else {
+      //     if (result[0]?.email === email && result[0]?.password === password) {
+      //       req.session.admin = true;
+      //       res.redirect("/admin/dashboard");
+      //     }
+      //   }
     }catch (err){
       console.log(err, "error while loading admin home page")
       res.status(500).render('404')
@@ -540,12 +552,19 @@ module.exports = {
   graphData: async (req, res) => {
     try{
       const [
-        sales
-      ] = await Promise.allSettled([
+        graphData
+      ]= await Promise.allSettled([
         adminHelpers.calculateMonthlySalesForGraph()
         //next function
       ])
-       res.json({ sales})
+      
+      const {  revenueByMonth, visitorsByMonth , orderStatitics } = graphData.value
+      const sales =  revenueByMonth
+      const visitors = visitorsByMonth
+      
+      console.log(orderStatitics)
+      
+       res.json({ sales, visitors , orderStatitics})
       
       }catch (err){
       console.log(err, "error while graph data ")

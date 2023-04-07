@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const adminControl = require("../../controller/admin-controller");
-const upload = require('../../middleware/multer-cloudinary')
+const upload = require('../../middleware/multer-cloudinary');
+const collections = require("../../config/collections");
 // const uploads = require('../../image-controller/multer');
 
 /* admin login page */
@@ -65,3 +66,6 @@ router.get('/adminSalesReport', adminControl.salesReportPage)
 /*get documents containing the specify date */
 router.post('/admin-getReport', adminControl.getDocWithinDate)
 module.exports = router;
+
+
+

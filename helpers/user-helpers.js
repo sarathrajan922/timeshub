@@ -694,4 +694,22 @@ changeCouponStatus : async (code)=>{
 
  },
 
+ saveIPAddress : async (IP)=>{
+  try{
+    await db.get().collection(collection.VISITORS_IP_COLLECTION).updateOne(
+    { IPAddress: IP },
+    { $set: { visistedDate: new Date() } },
+    { upsert: true }
+ );
+  
+    return
+
+    
+
+  }catch( err){
+    return err
+  }
+
+ },
+
 };

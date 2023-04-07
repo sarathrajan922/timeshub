@@ -111,6 +111,11 @@
                         <span class="text">Statistics</span>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="/admin/adminSalesReport"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Sales</span>
+                    </a>
+                </li>
             </ul>
             <hr>
             <!-- <ul class="menu-aside">
@@ -249,14 +254,28 @@
                                     <!-- <td><template class="__cf_email__" data-cfemail="aec3cfdcd8c7c0eecbd6cfc3dec2cb80cdc1c3">[email&#160;protected]</template></td> -->
                                     <td><%= locals.totalAmounts[i] %></td>
 
-                                    <% if (orderList[i].status === 'cancelled') { %>
-                                    <td><span class="badge rounded-pill alert-warning"><%= locals.orderList[i].status %></span></td>
-                                    <% } else { %>
+                                    <% if (orderList[i].status === 'Placed') { %>
+                                    <td><span class="badge rounded-pill alert-primary"><%= locals.orderList[i].status %></span></td>
+                                    <% } else if (orderList[i].status === 'confirmed'){ %>
                                         <td><span class="badge rounded-pill alert-success" id="<%= locals.orderList[i]._id %>"><%= locals.orderList[i].status %></span></td>
-                                        <% } %>
+                                        <% } else if (orderList[i].status === 'pending'){ %>
+                                            <td><span class="badge rounded-pill alert-warning" id="<%= locals.orderList[i]._id %>"><%= locals.orderList[i].status %></span></td>
+
+                                            <% }  else if (orderList[i].status === 'shipped'){ %>
+                                                <td><span class="badge rounded-pill alert-dark" id="<%= locals.orderList[i]._id %>"><%= locals.orderList[i].status %></span></td>
+                                                <% }  else if (orderList[i].status === 'out of delivery'){  %>
+                                                    <td><span class="badge rounded-pill alert-info" id="<%= locals.orderList[i]._id %>"><%= locals.orderList[i].status %></span></td>
+
+                                                    <% } else if (orderList[i].status === 'Completed'){ %>
+                                                        <td><span class="badge rounded-pill alert-success" id="<%= locals.orderList[i]._id %>"><%= locals.orderList[i].status %></span></td>
+
+                                                        <% }else {%>
+                                                            <td><span class="badge rounded-pill alert-danger" id="<%= locals.orderList[i]._id %>"><%= locals.orderList[i].status %></span></td>
+                                                            <% } %>
 
 
-                                    <td><%= locals.orderList[i].date %></td>
+
+                                    <td><%= locals.orderList[i].date.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' }) %></td>
                                     <td>
                                        
                                         <select id="status-select" class="form-control" style= "background-color: rgb(118, 132, 134); color: black; width: 60%;" data-style="btn-info" onchange="changeStatus(this.value, '<%= locals.orderList[i]._id %>')">
@@ -357,6 +376,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+
+let changeClass = (status)=>{
+         
+
+         switch(status){
+
+             case  'pending' :
+             return 'badge rounded-pill alert-primary'
+
+             case 'Placed' :
+             return "badge rounded-pill alert-primary"
+              
+             case 'confirmed' :
+             return 'badge rounded-pill alert-success'
+
+             case 'shipped' :
+             return 'badge rounded-pill alert-dark'
+
+             case 'out of delivery' :
+             return 'badge rounded-pill alert-info'
+
+             case 'Completed' :
+             return 'badge rounded-pill alert-success'
+
+             case 'Cancelled' :
+             return 'badge rounded-pill alert-danger'
+         }
+     }
 //         let data = document.getElementById('inputbox').value
 //         $(document).ready(function() {
 //   $('#status-select').on('change', function() {
@@ -372,7 +419,15 @@
         id: orderId,
      },
       success: function(response) {
-        document.getElementById(orderId).innerHTML = status
+
+          let className = changeClass(status)
+          console.log(className)
+        
+        $(`#${orderId}`).removeClass().addClass(className);
+          
+        
+
+         document.getElementById(orderId).innerHTML = status
         // console.log(response);
       },
       error: function(xhr, status, error) {

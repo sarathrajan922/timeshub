@@ -528,7 +528,83 @@ module.exports = {
       sales.forEach(({ month, totalRevenue }) => {
         revenueByMonth[month - 1] = totalRevenue;
       });
-      return revenueByMonth;
+
+      
+    // find monthly visitors
+
+    const visitors = await db
+  .get()
+  .collection(collection.VISITORS_IP_COLLECTION)
+  .aggregate([
+    {
+      $group: {
+        _id: {
+          year: { $year: "$visistedDate" },
+          month: { $month: "$visistedDate" },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        month: "$_id.month",
+        year: "$_id.year",
+        count: 1,
+      },
+    },
+    {
+      $sort: {
+        year: 1,
+        month: 1,
+      },
+    },
+  ])
+  .toArray();
+
+const visitorsByMonth = Array(12).fill(0);
+visitors.forEach(({ month, count }) => {
+  visitorsByMonth[month - 1] = count;
+});
+
+
+const orderStatitics = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+  {
+    $group: {
+      _id: null,
+      placedCount: { $sum: { $cond: [{ $eq: ["$status", "placed"] }, 1, 0] } },
+      shippedCount: { $sum: { $cond: [{ $eq: ["$status", "shipped"] }, 1, 0] } },
+      outForDeliveryCount: { $sum: { $cond: [{ $eq: ["$status", "out of delivery"] }, 1, 0] } },
+      completedCount: { $sum: { $cond: [{ $eq: ["$status", "Completed"] }, 1, 0] } },
+      cancelledCount: { $sum: { $cond: [{ $eq: ["$status", "Cancelled"] }, 1, 0] } },
+      pendingCount: { $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] } },
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      placedCount: 1,
+      shippedCount: 1,
+      outForDeliveryCount: 1,
+      completedCount: 1,
+      cancelledCount: 1,
+      pendingCount: 1
+    }
+  }
+])
+.toArray()
+
+
+
+
+
+
+
+let obj = { revenueByMonth, visitorsByMonth , orderStatitics}
+
+
+return obj
+      
     } catch (error) {
       console.log(error);
     }

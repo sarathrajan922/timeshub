@@ -16,8 +16,9 @@ module.exports = {
   /* user home page */
   userHomePage: async (req, res) => {
     try{
-      console.log("session check");
-      console.log(req.session.user);
+     
+      const ip = req.ip
+      await userHelpers.saveIPAddress(ip);
       res.render("user/user-home", { user: req.session.userPhone });
       
     }catch (err){
