@@ -52,9 +52,11 @@
                         <span class="text">Orders</span>
                     </a>
                     <div class="submenu">
-                        <a href="">Order list </a>
+                        <a href="/admin/adminOrderDetails">Order list </a>
                         <!-- <a href="page-orders-2.html">Order list 2</a> -->
-                        <a href="page-orders-detail.html">Order detail</a>
+                        <a href="/admin/adminOrderDetails">Order detail</a>
+
+                        <a href="/admin/adminRefundRequest">Refund Request</a>
                     </div>
                 </li>
                 <!-- <li class="menu-item has-submenu">
@@ -211,6 +213,8 @@
                 </div>
             </a>
             </div>
+
+            <% if ( locals.Digital.length && locals.Digital ) { %>
 
 
             <% if( locals.Digital.length !=0 ) { %>
@@ -580,6 +584,13 @@
                 </div>
             </div>
              <% } %>
+
+
+             <% }else { %>
+                <div>
+                    <h3>No category Available</h3>
+                </div>
+                <% } %>
 
 
 
