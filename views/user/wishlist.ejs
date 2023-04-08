@@ -32,7 +32,7 @@
 
 
                         <div class="table-responsive">
-
+                          <% if(locals.products && locals.products.length) { %>
 
                              <table class="table shopping-summery align-middle text-center clean">
                                 <thead>
@@ -90,7 +90,11 @@
                                 </tbody>
                             </table> 
 
-                            
+                            <% }else { %>
+                              <div>
+                              <h6>No Items Found</h6>
+                              </div>
+                              <% } %>
 
 
                         </div>

@@ -681,7 +681,7 @@ module.exports = {
     let userId = req.session.user;
     let result = await userHelpers.getWishList(userId);
 
-    let products = result[0].productDetails;
+    let products = result[0]?.productDetails;
 
     let india = new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -689,8 +689,8 @@ module.exports = {
     });
 
     let price = [];
-    for (let i = 0; i < products.length; i++) {
-      let newprice = india.format(products[i].price);
+    for (let i = 0; i < products?.length; i++) {
+      let newprice = india.format(products[i]?.price);
       price.push(newprice);
     }
 

@@ -13,9 +13,9 @@ module.exports.connect = (done)=>{
         if(err) 
         return done(err)
         state.db=await data.db(dbname)      
-        done()
+        done()  
     })
-}
+}  
  
 module.exports.get =()=>{ 
     return state.db
