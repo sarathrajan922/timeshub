@@ -5,7 +5,7 @@ const fs = require('fs')
 async function generateReport(reportType, data, type) {
     if(type === 'invoice'){
         //invoice 
-    console.log(reportType)
+  
     try {
         if (reportType === 'pdf') {
 
@@ -33,9 +33,9 @@ async function generateReport(reportType, data, type) {
          const shipping = ['', '', 'Shipping charge : ', '00']
         const total = ['', '', 'Total : ',grandtotal]
         // const date = ['', '','Invoice Date :', data[0].date]
-        console.log(data)
+   
         tData.push(subtotal, tax, shipping, total)
-        console.log(tData)
+      
         const table = {   
         title: 'TIMES HUB WATCHES pvt.limited',
         subtitle: 'Invoice Date :'+data[0].date,
@@ -55,7 +55,7 @@ async function generateReport(reportType, data, type) {
             doc.end()
             await new Promise((resolve, reject) => {
                 writeStream.on('finish', () => {
-                    console.log(`PDF report saved to ${filename}`)
+                    
                     resolve(filename)
                 })
                 writeStream.on('error', (error) => {
@@ -73,7 +73,7 @@ async function generateReport(reportType, data, type) {
     }
     }else{
         //admin side report
-        console.log(reportType)
+     
     try {
         if (reportType === 'pdf') {
 
@@ -101,9 +101,9 @@ async function generateReport(reportType, data, type) {
         const noofproduct = ['Total No:of Products', '', '', data[0].productCount]
        const monthlyEarnings = ['Monthly Earnings', '', '',data[0].totalValue]
         // const date = ['', '','Invoice Date :', data[0].date]
-        console.log(data)
+       
         tData.push(totalRevenue, orderCount, noofproduct,monthlyEarnings )
-        // console.log(tData)
+       
         const table = {   
         title: 'TIMES HUB WATCHES pvt.limited ',
         subtitle: date,
@@ -123,7 +123,7 @@ async function generateReport(reportType, data, type) {
             doc.end()
             await new Promise((resolve, reject) => {
                 writeStream.on('finish', () => {
-                    console.log(`PDF report saved to ${filename}`)
+                  
                     resolve(filename)
                 })
                 writeStream.on('error', (error) => {

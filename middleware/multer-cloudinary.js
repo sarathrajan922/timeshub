@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
         folder: 'ecommerce-products',
         allowedFormats: ['jpg', 'jpeg', 'png','webp'],
         public_id: (req, file) => {
-            console.log(file);
+            
             // remove the file extension from the file name
             const fileName = file.originalname.split('.').slice(0, -1).join('.');
             return fileName+new Date;

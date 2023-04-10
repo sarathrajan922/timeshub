@@ -13,7 +13,6 @@ module.exports = {
         .toArray();
       if (data.length) return data;
     } catch (err) {
-      console.log(err);
       return err;
     }
   },
@@ -606,7 +605,6 @@ let obj = { revenueByMonth, visitorsByMonth , orderStatitics}
 return obj
       
     } catch (error) {
-      console.log(error);
     }
   },
 
@@ -710,8 +708,8 @@ return obj
             },
           },
         ]).toArray();
-        
-      return data;
+
+         return data;
     } catch (err) {
       return err;
     }

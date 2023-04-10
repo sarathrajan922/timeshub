@@ -39,7 +39,7 @@ module.exports = {
 
       // let result = await adminHelpers.adminLogin(email)
       //   if (!result) {
-      //     console.log("email not exist");
+      //     
       //     res.redirect("/admin");
       //   } else {
       //     if (result[0]?.email === email && result[0]?.password === password) {
@@ -66,7 +66,7 @@ module.exports = {
   
         let allorders = await adminHelpers.getAllOrders();
   
-        console.log(allorders);
+     
         let totalRevenue = india.format(allorders[0]?.totalValue);
         let orderCount = allorders[0]?.orderCount;
         let productCount = allorders[0]?.productCount;
@@ -133,7 +133,7 @@ module.exports = {
   /* admin product form submit */
   productFormSubmit: async (req, res, next) => {
     try{
-      console.log(req.files);
+    
       await adminHelpers.addProduct(req.body, req.files);
   
       res.redirect("/admin/adminproduct");
@@ -321,8 +321,8 @@ module.exports = {
 
       let orderId = req.params.id;
       let orderDetails = await adminHelpers.getOrderDetails(orderId);
-      console.log('orderDetails')
-      console.log(orderDetails)
+     
+   
   
       let userId = orderDetails[0].userId.toString();
       let addressId = orderDetails[0].address.toString();
@@ -331,10 +331,9 @@ module.exports = {
   
       
       let product = orderDetails[0].products;
-      console.log(userDetails);
-      console.log(addressDetails);
+    
   
-      console.log(orderDetails[0].products);
+     
   
       res.render("admin/singleOrderDetails", {
         product,
@@ -380,7 +379,7 @@ module.exports = {
     try {
       allorders = await adminHelpers.getAllOrders();
 
-      console.log(allorders);
+
       let totalRevenue = india.format(allorders[0].totalValue);
       let orderCount = allorders[0].orderCount;
       let productCount = allorders[0].productCount;
@@ -391,14 +390,14 @@ module.exports = {
     try {
       // Convert the report into the selected file format and get the name of the generated file
       const reportFile = await generateReport(format, allorders, "report");
-      console.log(reportFile);
+     
       // Set content type and file extension based on format
       let contentType, fileExtension;
       if (format === "pdf") {
         contentType = "application/pdf";
         fileExtension = "pdf";
       } else if (format === "excel") {
-        console.log("proper format");
+        
         contentType =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         fileExtension = "xlsx";
@@ -414,7 +413,7 @@ module.exports = {
       const fileStream = fs.createReadStream(reportFile);
       fileStream.pipe(res);
       fileStream.on("end", () => {
-        console.log("File sent successfully!");
+      
         // Remove the file from the server
         fs.unlink(reportFile, (err) => {
           if (err) {
@@ -449,7 +448,7 @@ module.exports = {
       const { category, discountPercentage } = req.body;
       await adminHelpers.applyCatgeoryOffer(category, discountPercentage);
   
-      console.log("offer applied successfully");
+    
   
       res.redirect("/admin/add-offer");
     }catch (err){
@@ -465,7 +464,7 @@ module.exports = {
   
       await adminHelpers.applyProductOffer(product, discountPercentage);
   
-      console.log("product offer applied successfully");
+     
       res.redirect("/admin/add-offer");
     }catch (err){
       console.log(err, "error while product offer submiting")
@@ -562,7 +561,7 @@ module.exports = {
       const sales =  revenueByMonth
       const visitors = visitorsByMonth
       
-      console.log(orderStatitics)
+
       
        res.json({ sales, visitors , orderStatitics})
       
@@ -580,7 +579,7 @@ module.exports = {
       });
       // orderDetails
     let orderDetails = await adminHelpers.getCompletedOrders()
-    console.log(orderDetails)
+  
     let amount = []
     let OrderDates = []
 
@@ -621,17 +620,15 @@ module.exports = {
         style: "currency",
         currency: "INR",
       });
-      console.log('date range found')
-      console.log(req.body)
+   
       const {startDate,endDate} = req.body
       // Convert the start and end date strings to JavaScript Date objects
       const date1 = new Date(startDate);
       const date2 = new Date(endDate);
-      console.log(date1)
-      console.log(date2)
+ 
 
       let orderDetails = await adminHelpers.OrderDetailsWithinRange(date1, date2)
-      console.log(orderDetails)
+    
       let amount = []
     let OrderDates = []
 
@@ -661,7 +658,6 @@ module.exports = {
 
 
     }catch (err){
-      console.log(err, "error while getting the doc within the date range");
       res.status(500).render('404')
     }
 

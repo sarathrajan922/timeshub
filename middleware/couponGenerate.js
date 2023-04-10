@@ -19,11 +19,11 @@ const couponGenerator =  async(userId)=>{
     // Find one document at the randomly generated index
     const randomCoupon = await collection.findOne({}, { skip: randomIndex });
 
-   console.log(randomCoupon)
+ 
 
    const codeLength = 4; 
    const code = crypto.randomBytes(codeLength).toString('hex').toUpperCase();
-     console.log(`coupon code : ${code}`)
+    
 
   const { _id, title , description, percentage, price_Limit, model } = randomCoupon
 

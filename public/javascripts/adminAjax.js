@@ -1,6 +1,6 @@
 const generateReport = (format)=>{
 
-    console.log(format);
+  
  $.ajax({
    url: "/admin/download-report",
    data: { format },

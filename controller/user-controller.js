@@ -218,7 +218,7 @@ module.exports = {
   },
   otpverification: async (req, res) => {
     try{
-      console.log(req.body);
+  
       const { otp } = req.body;
   
       const pin = otp.join("");
@@ -255,7 +255,7 @@ module.exports = {
         });
         let newprice = india.format(data[0].price);
   
-        console.log(data);
+     
   
         res.render("user/product-full-view", { array: data, newprice });
     
@@ -573,13 +573,13 @@ module.exports = {
   },
 /*verify payment */
   verifyPayment: (req, res) => {
-    console.log(req.body);
+
 
     userHelpers
       .verifypayment(req.body)
       .then(() => {
         userHelpers.changePaymentStatus(req.session.recentOrderId).then(() => {
-          console.log("payment success");
+         
           res.json({ status: true });
         });
       })
@@ -591,8 +591,7 @@ module.exports = {
   changeName: async (req, res) => {
     const userId = req.body.id;
     const newName = req.body.newName;
-    console.log(userId);
-    console.log(newName);
+  
 
     let result = await userHelpers.changeName(userId, newName);
     if (result) {
@@ -613,20 +612,20 @@ module.exports = {
     try {
       recentOrder = await userHelpers.recentOrder(orderId);
     } catch (err) {
-      console.log("Error calculating sales data:", err);
+    
       return res.status(500).send("Error calculating sales data");
     }
     try {
       // Convert the report into the selected file format and get the name of the generated file
       const reportFile = await generateReport(format, recentOrder, "invoice");
-      console.log(reportFile);
+    
       // Set content type and file extension based on format
       let contentType, fileExtension;
       if (format === "pdf") {
         contentType = "application/pdf";
         fileExtension = "pdf";
       } else if (format === "excel") {
-        console.log("proper format");
+       
         contentType =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         fileExtension = "xlsx";
@@ -642,13 +641,11 @@ module.exports = {
       const fileStream = fs.createReadStream(reportFile);
       fileStream.pipe(res);
       fileStream.on("end", () => {
-        console.log("File sent successfully!");
+        
         // Remove the file from the server
         fs.unlink(reportFile, (err) => {
           if (err) {
             console.log("Error deleting file:", err);
-          } else {
-            console.log("File deleted successfully!");
           }
         });
       });
@@ -667,10 +664,9 @@ module.exports = {
     let userDetails = await userHelpers.getUserDetails(userId);
     let addressDetails = await userHelpers.getOrderAddress(addressId);
 
-    // console.log(orderDet)
+ 
     let product = orderDet[0].products;
-    // console.log(userDetails)
-    // console.log(addressDetails)
+ 
 
     // ajax response here
     res.json({ product, addressDetails, orderDet });
@@ -701,8 +697,7 @@ module.exports = {
     let productId = req.params.id;
     let userId = req.session.user;
 
-    console.log(productId);
-    console.log(userId);
+  
 
     await userHelpers.AddtoWishlist(productId, userId);
 
@@ -722,9 +717,6 @@ module.exports = {
     const userId = req.session.user;
     const result = await userHelpers.getUserCoupons(userId);
 
-    console.log("user coupon found");
-    console.log(result);
-
     res.render("user/user-coupons", { result });
   },
 /* user appied coupon */
@@ -736,7 +728,7 @@ module.exports = {
     if (!result) {
       res.json({ status: "Invalid Coupon" });
     } else {
-      console.log(result);
+   
 
       let { percentage } = result;
       let amount = (total / 100) * percentage;
@@ -771,7 +763,7 @@ module.exports = {
     
     const amount = india.format(userWallet[0]?.amount)
     const transaction = userWallet[0]?.Transaction
-    console.log(transaction)
+    
     let total = []
     for(let i=0; i < transaction?.length ; i++){
      let price = india.format(transaction[i]?.amount)
@@ -799,14 +791,14 @@ module.exports = {
    }
    
 
-    console.log(transactionDates)
+  
 
     res.render('user/userWallet',{amount, transaction,total , date : transactionDates})
   },
 
   /*refund request */
   refundRequest : async (req,res)=>{
-    console.log(req.body)
+  
 
     const {orderId, amount }= req.body
     const userId = req.session.user

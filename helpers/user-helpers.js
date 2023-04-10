@@ -15,10 +15,7 @@ module.exports = {
         let data = await db
           .get()
           .collection(collection.USER_COLLECTION)
-          .insertOne(obj, (err) => {
-            if (err) console.log("data insert err");
-            else console.log("1 document inserted");
-          });
+          .insertOne(obj);
         return 
    
       
@@ -53,7 +50,7 @@ module.exports = {
           .collection(collection.USER_COLLECTION)
           .find({ phone: mobile })
           .toArray();
-        console.log(data);
+       
         return data
     
     }catch (err){
@@ -122,17 +119,17 @@ module.exports = {
           .get()
           .collection(collection.CART_COLLECTION)
           .findOne({ userId: ObjectId(userId) });
-        //   console.log(userCart)
-        console.log(ObjectId(productId));
+      
+   
   
         if (userCart) {
-          console.log("user cart exist");
+        
           let isProductExist = userCart?.products.findIndex((product) => {
             return product.item == productId;
           });
-          console.log(isProductExist);
+         
           if (isProductExist != -1) {
-            console.log("product is already exist");
+           
             db.get()
               .collection(collection.CART_COLLECTION)
               .updateOne(
@@ -159,12 +156,12 @@ module.exports = {
                 }
               )
               .then((response) => {
-                console.log("updated user cart");
+               
                 resolve({ status: true });
               });
           }
         } else {
-          console.log("new cart created");
+          
           let cart = {
             userId: ObjectId(userId),
             products: [product],
@@ -173,7 +170,7 @@ module.exports = {
             .collection(collection.CART_COLLECTION)
             .insertOne(cart)
             .then((response) => {
-              console.log("added product into the cart");
+             
               resolve(response);
             });
         }
@@ -683,7 +680,6 @@ changeCouponStatus : async (code)=>{
   try{
 
     let result = await db.get().collection(collection.USER_WALLET_COLLECTION).find({ userId : userId}).toArray()
-    console.log('get wallet success')
     return result
 
 

@@ -34,7 +34,7 @@ const changeQuantity = (cartId, productId, userId, count,i) => {
         //   }
         // });
       } else {
-        console.log(response)
+  
         document.getElementById(productId).innerHTML = quantity + count;
         let india = new Intl.NumberFormat("en-IN",{
           style: 'currency',
@@ -46,7 +46,7 @@ const changeQuantity = (cartId, productId, userId, count,i) => {
         document.getElementById("subtotal").innerHTML = total;
         document.getElementById(productId+'-subtotal').innerHTML = subtotal
 
-        console.log(response.total);
+      
 
         //  const subtotalArr = response.subtotal
         //  for(let i=0; i < subtotalArr.length; i++){
@@ -105,7 +105,7 @@ const removeItem = (cartId, productId) => {
 //     url:'/proceed-to-checkout',
 //     data: $('#checkout-form').serialize(),
 //     success:(response)=>{
-//       console.log(response)
+//     
 //       if(response.status === 'COD'){
 //         location.href('/order-success-page')
 //       }else if(response.status === 'UPI'){
@@ -134,7 +134,7 @@ const removeItem = (cartId, productId) => {
 //       }
 //     },
 //     error: (response, stat, err) => {
-//       console.log(response);
+//   
 //     },
 //   });
 // });
@@ -166,7 +166,7 @@ function deleteOrder(id) {
 
 
 const generateSalesReport = (format,orderId) => {
-console.log(format);
+
 $.ajax({
 url: "/download-invoice",
 data: { format ,orderId },

@@ -1,5 +1,5 @@
 function generateSalesReport (format,orderId) {
-    console.log(format);
+
     $.ajax({
       url: "/download-invoice",
       data: { format ,orderId },

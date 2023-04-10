@@ -9,7 +9,7 @@ module.exports ={
     },
     isUserExist:(req,res ,next)=>{
         if(!req.session.user){
-            res.redirect('/')
+            res.redirect('/login')
         }else{
             next()
         }
