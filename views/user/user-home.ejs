@@ -294,13 +294,17 @@
                     <div class="header-action-icon-2">
                       <a href="/view-wishlist">
                         <img class="svgInject" alt="Evara" src="/assets/user/imgs/theme/icons/icon-heart.svg" />
-                        <span class="pro-count blue">4</span>
+                        <% if(locals?.wishlistCount) { %>
+                        <span class="pro-count blue"><%= wishlistCount %></span>
+                        <% } %>
                       </a>
                     </div>
                     <div class="header-action-icon-2">
                       <a class="mini-cart-icon" href="/view-cart">
-                        <img alt="Evara" src="/assets/user/imgs/theme/icons/icon-cart.svg" />
-                        <span class="pro-count blue">1</span>
+                        <img alt="Timeshub" src="/assets/user/imgs/theme/icons/icon-cart.svg" />
+                        <% if(locals.cartCount) { %>
+                        <span class="pro-count blue"><%= cartCount %></span>
+                        <% } %>
                       </a>
                       <!-- <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
@@ -398,26 +402,10 @@
                         <a class="active" href="/">Home <i class=""></i></a>
                         
                       </li>
-                      <li>
-                        <a href="page-about.html">About</a>
-                      </li>
+                 
                       <li>
                         <a href="/shop">Shop <i class=""></i></a>
-                        <!-- <ul class="sub-menu">
-                                            <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                            <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                            <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                            <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                            <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                            <li><a href="#">Single Product <i class="fi-rs-angle-right"></i></a>
-                                                
-                                            </li>
-                                            <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                            <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
-                                            <li><a href="shop-cart.html">Shop – Cart</a></li>
-                                            <li><a href="shop-checkout.html">Shop – Checkout</a></li>
-                                            <li><a href="shop-compare.html">Shop – Compare</a></li>
-                                        </ul> -->
+                       
                       </li>
 
                       <li>

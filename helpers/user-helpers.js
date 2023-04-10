@@ -708,4 +708,27 @@ changeCouponStatus : async (code)=>{
 
  },
 
+ getCartCount : async (userId)=>{
+  try{
+
+  
+    const cartCount = await db.get().collection(collection.CART_COLLECTION)
+   .find({ userId : ObjectId(userId)})
+    .toArray()
+
+     const wishlistCount = await db.get()
+     .collection(collection.WISHLIST_COLLECTION)
+     .find({user : ObjectId(userId)}).toArray()
+
+     return obj = {
+      cartCount : cartCount[0].products.length,
+      wishlistCount : wishlistCount[0].products.length
+     }
+
+
+  }catch( err){
+    return err
+  }
+ }
+
 };

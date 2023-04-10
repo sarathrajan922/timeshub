@@ -19,7 +19,15 @@ module.exports = {
      
       const ip = req.ip
       await userHelpers.saveIPAddress(ip);
-      res.render("user/user-home", { user: req.session.userPhone });
+      if(req.session.user){
+        let userId = req.session.user
+        let cartWishlistCounts = await userHelpers.getCartCount(userId)
+        let {cartCount ,wishlistCount } = cartWishlistCounts
+        res.render("user/user-home", { user: req.session.userPhone, cartCount, wishlistCount });
+      }else{
+
+        res.render("user/user-home", { user: req.session.userPhone });
+      }
       
     }catch (err){
       console.log(err + "error while loading user home page")
@@ -159,7 +167,10 @@ module.exports = {
           let newprice = india.format(result[i].discountprice);
           offerPrice.push(newprice);
         }
-        res.render("user/user-shop", { array: result, productPrice, offerPrice });
+        let userId = req.session.user
+        let cartWishlistCounts = await userHelpers.getCartCount(userId)
+        let {cartCount ,wishlistCount } = cartWishlistCounts
+        res.render("user/user-shop", { array: result, productPrice, offerPrice ,cartCount, wishlistCount});
       
     }catch (err){
       console.log(err + "error while loading shoping page")
@@ -256,8 +267,10 @@ module.exports = {
         let newprice = india.format(data[0].price);
   
      
-  
-        res.render("user/product-full-view", { array: data, newprice });
+        let userId = req.session.user
+        let cartWishlistCounts = await userHelpers.getCartCount(userId)
+        let {cartCount ,wishlistCount } = cartWishlistCounts
+        res.render("user/product-full-view", { array: data, newprice , cartCount, wishlistCount});
     
       
     }catch (err){
@@ -269,6 +282,8 @@ module.exports = {
   viewCart: async (req, res) => {
     try{
       const userId = req.session.user;
+      let cartWishlistCounts = await userHelpers.getCartCount(userId)
+      let {cartCount ,wishlistCount } = cartWishlistCounts
       let cartItems = await userHelpers.getCartProduct(userId);
       let india = new Intl.NumberFormat("en-IN", {
         style: "currency",
@@ -291,6 +306,8 @@ module.exports = {
       let coupons = await userHelpers.getUserCoupons(userId);
   
       res.render("user/cart-page", {
+        cartCount,
+        wishlistCount,
         cartItems,
         carId,
         userId,
@@ -322,13 +339,17 @@ module.exports = {
   /*user account page */
   userAccount: async (req, res) => {
     try{
+
+      let userId = req.session.user
+      let cartWishlistCounts = await userHelpers.getCartCount(userId)
+      let {cartCount ,wishlistCount } = cartWishlistCounts
       
       let india = new Intl.NumberFormat("en-IN", {
         style: "currency",
         currency: "INR",
       });
   
-     let response = await userHelpers.getAddress(req.session.user)
+     let response = await userHelpers.getAddress(userId)
         const { address, userDetails, orderDetails } = response;
   
         let ordertotal = [];
@@ -342,6 +363,8 @@ module.exports = {
           userData: userDetails,
           orderDetails: orderDetails,
           ordertotal,
+          cartCount,
+          wishlistCount
         });
       
     }catch (err){
@@ -422,7 +445,8 @@ module.exports = {
       const carId = cartItems[0]._id;
       const total = india.format(cartItems[0].total);
       const GrandTotal = india.format(req.session.discountPrice);
-  
+      let cartWishlistCounts = await userHelpers.getCartCount(userId)
+      let {cartCount ,wishlistCount } = cartWishlistCounts
       cartItems = cartItems[0].products;
       let price = [];
       let subtotals = [];
@@ -437,6 +461,8 @@ module.exports = {
         const { address, userDetails } = response;
   
         res.render("user/order-confirm-page", {
+          cartCount,
+          wishlistCount,
           address: address,
           userData: userDetails,
           cartItems,
@@ -535,6 +561,9 @@ module.exports = {
   },
   /*order success page  */
   orderSuccessPage: async (req, res) => {
+    let userId = req.session.user
+    let cartWishlistCounts = await userHelpers.getCartCount(userId)
+    let {cartCount ,wishlistCount } = cartWishlistCounts
     let india = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
@@ -553,6 +582,8 @@ module.exports = {
     let items = recentOrder[0].items;
     let orderIds = recentOrder[0]._id;
     res.render("user/order-success-page", {
+      cartCount,
+      wishlistCount,
       Date,
       subtotal,
       GrandTotal,
