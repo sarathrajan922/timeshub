@@ -105,6 +105,8 @@ module.exports = {
           }
        
       } else {
+        console.log("---------error---------")
+        console.log(err);
         req.session.validationErr = true; //validation failed
         res.redirect("/signup");
       }
