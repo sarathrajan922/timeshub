@@ -140,14 +140,6 @@
                                 </div>
                              </div>
                           </div> 
-                       
-
-                        
-                        
-
-
-
-
                            <div class="col-lg-6 col-md-12">
                               <div class="border p-md-4 p-30 border-radius cart-totals">
                                   <div class="heading_s1 mb-3">
@@ -176,9 +168,6 @@
                               </div>
                           </div>
                       </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -261,10 +250,10 @@
        
         document.getElementById(productId).innerHTML = quantity + count;
         const num = quantity+count
-        console.log(num)
+        
         const price = parseInt(productPrice)
         let sub= num*price
-        console.log(sub)
+        
         let formattedPrice = india.format(sub)
         
       
@@ -274,7 +263,7 @@
         document.getElementById("subtotal").innerHTML = total;
         document.getElementById(productId+'-subtotal').innerHTML = formattedPrice
 
-        console.log(response.total);
+    
 
         //  const subtotalArr = response.subtotal
         //  for(let i=0; i < subtotalArr.length; i++){

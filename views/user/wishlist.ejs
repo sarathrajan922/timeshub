@@ -1,7 +1,3 @@
-
-
-
-
 <%- include('header-1') -%>
 
 
@@ -9,185 +5,164 @@
 
 
 
-    <main class="main">
+  <main class="main">
 
 
 
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="/" rel="nofollow">Home</a>
-                    
-                    <span></span> Your Wishlist
-                </div>
-            </div>
+    <div class="page-header breadcrumb-wrap">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="/" rel="nofollow">Home</a>
+
+          <span></span> Your Wishlist
         </div>
-
-        
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
+      </div>
+    </div>
 
 
-
-                        <div class="table-responsive">
-                          <% if(locals.products && locals.products.length) { %>
-
-                             <table class="table shopping-summery align-middle text-center clean">
-                                <thead>
-                                    <tr class="main-heading">
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Price</th>
-                                        
-                                        <th scope="col">Add to Cart</th>
-                                        <th scope="col">Remove</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>                         
-
-                                    <% for(let i = locals.products.length-1; i>=0; i--){ %>
-
-                                  
-                                    <tr>
-                                        <td class="image product-thumbnail align-middle"><img style="width: 50px; height: 50px;" src="<%= locals.products[i].images.image1 %>" alt="#"></td>
-                                        <td class="product-des product-name align-middle">
-                                            <h5 class="product-name"><a href="shop-product-right.html"><%= locals.products[i].productname %></a></h5>
-                                            </p>
-                                        </td>
-                                        <td class="price align-middle" data-title="Price"><span id=""><%= locals.price[i] %></span></td>
-                                        <td class="text-center align-middle" data-title="Add">
-                                            <div class="product-action-1 show">
-                                                <a aria-label="Add To Cart" class="action-btn hover-up"
-                                                onclick="addtoCart('<%= locals.products[i]._id %>')"><i style="color: rgb(20, 239, 20);" class="fi-rs-shopping-bag-add"></i></a>
-                                           
-                                            </div>
-                                              
-                                         </td>
-                                        <td class=" align-middle" data-title="Remove">
-                                            <div >
-                                                <a onclick="deleteWishlist('<%= locals.products[i]._id %>')">
-                                                <i class="fi-rs-trash" style="color: red;"></i>
-                                            </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <% } %>
-                               
-
-                             
-
-                                    
-                                    
-                                    <tr>
-                                        <td colspan="6" class="text-end">
-                                            <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear wishlist</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> 
-
-                            <% }else { %>
-                              <div>
-                              <h6>No Items Found</h6>
-                              </div>
-                              <% } %>
-
-
-                        </div>
+    <section class="mt-50 mb-50">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
 
 
 
-                        
-                        
+            <div class="table-responsive">
+              <% if(locals.products && locals.products.length) { %>
 
-                        <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
-                        
+                <table class="table shopping-summery align-middle text-center clean">
+                  <thead>
+                    <tr class="main-heading">
+                      <th scope="col">Image</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Price</th>
+
+                      <th scope="col">Add to Cart</th>
+                      <th scope="col">Remove</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    <% for(let i=locals.products.length-1; i>=0; i--){ %>
+
+
+                      <tr>
+                        <td class="image product-thumbnail align-middle"><img style="width: 50px; height: 50px;"
+                            src="<%= locals.products[i].images.image1 %>" alt="#"></td>
+                        <td class="product-des product-name align-middle">
+                          <h5 class="product-name"><a href="shop-product-right.html">
+                              <%= locals.products[i].productname %>
+                            </a></h5>
+                          </p>
+                        </td>
+                        <td class="price align-middle" data-title="Price"><span id="">
+                            <%= locals.price[i] %>
+                          </span></td>
+                        <td class="text-center align-middle" data-title="Add">
+                          <div class="product-action-1 show">
+                            <a aria-label="Add To Cart" class="action-btn hover-up"
+                              onclick="addtoCart('<%= locals.products[i]._id %>')"><i style="color: rgb(20, 239, 20);"
+                                class="fi-rs-shopping-bag-add"></i></a>
+
+                          </div>
+
+                        </td>
+                        <td class=" align-middle" data-title="Remove">
+                          <div>
+                            <a onclick="deleteWishlist('<%= locals.products[i]._id %>')">
+                              <i class="fi-rs-trash" style="color: red;"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+
+                      <% } %>
 
 
 
 
-                    </div>
-                </div>
+
+
+                        <tr>
+                          <td colspan="6" class="text-end">
+                            <a href="#" class="text-muted"> <i class="fi-rs-cross-small"></i> Clear wishlist</a>
+                          </td>
+                        </tr>
+                  </tbody>
+                </table>
+
+                <% }else { %>
+                  <div>
+                    <h6>No Items Found</h6>
+                  </div>
+                  <% } %>
             </div>
-        </section>
-
-   
-    
-
-
-
-
-
-    </main>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
 
 
-    <script>
+  <script>
 
-function addtoCart(productId) {
-  console.log(productId);
-  $.ajax({
-    url: `/add-to-cart/${productId}`,
-    method: "get",
-    success: (response) => {
-      if (response.status) {
-        swal({
-          title: "Good job!",
-          text: "Product Added Successfully!",
-          icon: "success",
-          button: false,
-          timer: 1000,
-        });
-      }
-    },
-  });
-}
-
-        
-function deleteWishlist(productId){
-
-swal({
-  title: "Are you sure?",
-  text: "😢😢",
-  icon: "warning",
-  buttons: true,
-  dangerMode: true,
-}).then((willDelete) => {
-  if (willDelete) {
-    swal("Poof! Your wishlist item has been removed!", {
-      icon: "success",
-    }).then(() => {
-      deleteWishlistItem(productId)
-    });
-  } else {
-    swal("Your order is safe 😊!");
-  }
-});
-
-}
-
-function deleteWishlistItem(proId){
- $.ajax({
-  url: '/delete-wishlist-item',
-  method: 'post',
-  data: {
-    proId
-  },
-  success: (response)=>{
-      console.log("response status: "+response)
-      location.reload()
-    
-  }
- })
-}
-    </script>
-<%- include('footer-1') -%>
+    function addtoCart(productId) {
+      console.log(productId);
+      $.ajax({
+        url: `/add-to-cart/${productId}`,
+        method: "get",
+        success: (response) => {
+          if (response.status) {
+            swal({
+              title: "Good job!",
+              text: "Product Added Successfully!",
+              icon: "success",
+              button: false,
+              timer: 1000,
+            });
+          }
+        },
+      });
+    }
 
 
+    function deleteWishlist(productId) {
 
+      swal({
+        title: "Are you sure?",
+        text: "😢😢",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          swal("Poof! Your wishlist item has been removed!", {
+            icon: "success",
+          }).then(() => {
+            deleteWishlistItem(productId)
+          });
+        } else {
+          swal("Your order is safe 😊!");
+        }
+      });
 
-   
+    }
+
+    function deleteWishlistItem(proId) {
+      $.ajax({
+        url: '/delete-wishlist-item',
+        method: 'post',
+        data: {
+          proId
+        },
+        success: (response) => {
+          console.log("response status: " + response)
+          location.reload()
+
+        }
+      })
+    }
+  </script>
+  <%- include('footer-1') -%>
