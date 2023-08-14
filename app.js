@@ -8,10 +8,11 @@ const session = require('express-session');
 const nocache = require('nocache');
 const multer = require('multer')
 const CustomError = require('./middleware/customError')
+require('dotenv').config();
 
 
 const app = express();
-require('dotenv').config();
+
 
 const adminRouter = require('./routes/admin/admin');
 const usersRouter = require('./routes/user/users');
