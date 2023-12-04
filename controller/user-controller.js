@@ -15,28 +15,29 @@ let err;
 module.exports = {
   /* user home page */
   userHomePage: async (req, res) => {
-    try{
-     
-      const ip = req.ip
+    try {
+      const ip = req.ip;
       await userHelpers.saveIPAddress(ip);
-      if(req.session.user){
-        let userId = req.session.user
-        let cartWishlistCounts = await userHelpers.getCartCount(userId)
-        let {cartCount ,wishlistCount } = cartWishlistCounts
-        res.render("user/user-home", { user: req.session.userPhone, cartCount, wishlistCount });
-      }else{
-
+      if (req.session.user) {
+        let userId = req.session.user;
+        let cartWishlistCounts = await userHelpers.getCartCount(userId);
+        let { cartCount, wishlistCount } = cartWishlistCounts;
+        res.render("user/user-home", {
+          user: req.session.userPhone,
+          cartCount,
+          wishlistCount,
+        });
+      } else {
         res.render("user/user-home", { user: req.session.userPhone });
       }
-      
-    }catch (err){
-      console.log(err + "error while loading user home page")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while loading user home page");
+      res.status(500).render("404");
     }
-  },  
+  },
   /* user login page */
   userLoginPage: function (req, res, next) {
-    try{ 
+    try {
       if (req.session.userPhone) {
         res.redirect("/");
       } else {
@@ -48,244 +49,238 @@ module.exports = {
         req.session.userNotFound = false;
         req.session.blockErr = false;
       }
-    }catch (err){
-      console.log(err + "error while loading login  page")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while loading login  page");
+      res.status(500).render("404");
     }
   },
   /*user signup form */
   userSignUpPage: function (req, res) {
-    try{
-      
+    try {
       let userAlready = req.session.userAlready;
       let validationErr = req.session.validationErr;
-  
+
       res.render("user/user-signup", {
         userAlready: userAlready,
         validationErr: validationErr,
       });
-    }catch (err){
-      console.log(err + "error while loading signup page")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while loading signup page");
+      res.status(500).render("404");
     }
   },
   /*user submit the form data */
   userRegistration: async (req, res) => {
-    try{
-      
+    try {
       let errors = validationResult(req);
-  
+
       err = errors.errors;
       if (err.length == 0) {
-      let status =  await userHelpers.userExist(req.body.email)
-          if (status.length == 0) {
-            const { email, password, phone, username } = req.body;
-            // validation
-  
-            // password bycrpt
-            bcrypt.hash(password, 10, async (err, hash) => {
-              const obj = {
-                name: username,
-                email: email,
-                password: hash,
-                address: {},
-                gender: null,
-                phone: phone,
-                active: true,
-              };
-  
-               await userHelpers.userRegister(obj);
-            });
-  
-            res.redirect("/login");
-          } else {
-            // user already exist error message
-            req.session.userAlready = true;
-            res.redirect("/signup");
-          }
-       
+        let status = await userHelpers.userExist(req.body.email);
+        if (status.length == 0) {
+          const { email, password, phone, username } = req.body;
+          // validation
+
+          // password bycrpt
+          bcrypt.hash(password, 10, async (err, hash) => {
+            const obj = {
+              name: username,
+              email: email,
+              password: hash,
+              address: {},
+              gender: null,
+              phone: phone,
+              active: true,
+            };
+
+            await userHelpers.userRegister(obj);
+          });
+
+          res.redirect("/login");
+        } else {
+          // user already exist error message
+          req.session.userAlready = true;
+          res.redirect("/signup");
+        }
       } else {
-        console.log("---------error---------")
+        console.log("---------error---------");
         console.log(err);
         req.session.validationErr = true; //validation failed
         res.redirect("/signup");
       }
-    }catch (err){
-      console.log(err + "error while user registration")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while user registration");
+      res.status(500).render("404");
     }
   },
   /*user login form submit */
   LoginSubmit: async (req, res, next) => {
-    try{
-      
+    try {
       const { email, password } = req.body;
-     let data =  await userHelpers.doLogin(email)
-        if (data.length === 0) {
-          req.session.userNotFound = true;
-          res.redirect("/login"); //user not exist
+      let data = await userHelpers.doLogin(email);
+      if (data.length === 0) {
+        req.session.userNotFound = true;
+        res.redirect("/login"); //user not exist
+      } else {
+        if (data[0].active === false) {
+          req.session.blockErr = "You have been blocked";
+          res.redirect("/login"); //  user blocked by admin
         } else {
-          if (data[0].active === false) {
-            req.session.blockErr = "You have been blocked";
-            res.redirect("/login"); //  user blocked by admin
-          } else {
-            var DBpass = data[0].password;
-            /* bcrypt user loged password and compare  */
-            bcrypt.compare(password, DBpass, (err, result) => {
-              if (result) {
-                /* validation */
-                if (email === data[0].email) {
-                  req.session.userPhone = data[0].phone;
-                  req.session.user = data[0]._id;
-                  res.redirect("/");
-                }
+          var DBpass = data[0].password;
+          /* bcrypt user loged password and compare  */
+          bcrypt.compare(password, DBpass, (err, result) => {
+            if (result) {
+              /* validation */
+              if (email === data[0].email) {
+                req.session.userPhone = data[0].phone;
+                req.session.user = data[0]._id;
+                res.redirect("/");
               }
-            });
-          }
+            }
+          });
         }
-     
-    }catch (err){
-      console.log(err + "error while login submit")
-      res.status(500).render('404')
+      }
+    } catch (err) {
+      console.log(err + "error while login submit");
+      res.status(500).render("404");
     }
   },
   /*shopping page */
   shoppingPage: async (req, res) => {
-    try{
-      
-    let result =  await userHelpers.getProduct()
-        let india = new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: "INR",
-        });
-        let productPrice = [];
-        for (let i = 0; i < result.length; i++) {
-          let newprice = india.format(result[i].price);
-          productPrice.push(newprice);
-        }
-  
-        let offerPrice = [];
-        for (let i = 0; i < result.length; i++) {
-          let newprice = india.format(result[i].discountprice);
-          offerPrice.push(newprice);
-        }
-        let userId = req.session.user
-        let cartWishlistCounts = await userHelpers.getCartCount(userId)
-        let {cartCount ,wishlistCount } = cartWishlistCounts
-        res.render("user/user-shop", { array: result, productPrice, offerPrice ,cartCount, wishlistCount});
-      
-    }catch (err){
-      console.log(err + "error while loading shoping page")
-      res.status(500).render('404')
+    try {
+      let result = await userHelpers.getProduct();
+      let india = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+      });
+      let productPrice = [];
+      for (let i = 0; i < result.length; i++) {
+        let newprice = india.format(result[i].price);
+        productPrice.push(newprice);
+      }
+
+      let offerPrice = [];
+      for (let i = 0; i < result.length; i++) {
+        let newprice = india.format(result[i].discountprice);
+        offerPrice.push(newprice);
+      }
+      let userId = req.session.user;
+      let cartWishlistCounts = await userHelpers.getCartCount(userId);
+      let { cartCount, wishlistCount } = cartWishlistCounts;
+      res.render("user/user-shop", {
+        array: result,
+        productPrice,
+        offerPrice,
+        cartCount,
+        wishlistCount,
+      });
+    } catch (err) {
+      console.log(err + "error while loading shoping page");
+      res.status(500).render("404");
     }
   },
   /*mobile verification form loading and verification  */
   mobileNoPage: (req, res) => {
-    try{
+    try {
       res.render("user/mobile-validation-page");
-      
-    }catch (err){
-      console.log(err + "error while loading moblie number page")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while loading moblie number page");
+      res.status(500).render("404");
     }
   },
   mobileNoVerification: async (req, res) => {
-    try{
-      
+    try {
       let mobile = req.body.mobile;
-  
-     let result = await userHelpers.mobileExist(mobile)
-        if (result.length == 0) {
-          req.session.userNotFound = true;
-          res.redirect("/login"); //user not exist
+
+      let result = await userHelpers.mobileExist(mobile);
+      if (result.length == 0) {
+        req.session.userNotFound = true;
+        res.redirect("/login"); //user not exist
+      } else {
+        if (result[0].active === false) {
+          req.session.blockErr = "You have been blocked";
+          res.redirect("/login"); //  user blocked by admin
         } else {
-          if (result[0].active === false) {
-            req.session.blockErr = "You have been blocked";
-            res.redirect("/login"); //  user blocked by admin
-          } else {
-            req.session.userPhone = mobile;
-            req.session.user = result[0]._id;
-            // otp send code
-  
-            twilio.generateOtp(mobile).then((result) => {
-              if (result)
-                res.redirect("/otpValidate"); /*otp verification form  */
-            });
-          }
+          req.session.userPhone = mobile;
+          req.session.user = result[0]._id;
+          // otp send code
+
+          twilio.generateOtp(mobile).then((result) => {
+            if (result)
+              res.redirect("/otpValidate"); /*otp verification form  */
+          });
         }
-     
-    }catch (err){
-      console.log(err + "error while moblie verification")
-      res.status(500).render('404')
+      }
+    } catch (err) {
+      console.log(err + "error while moblie verification");
+      res.status(500).render("404");
     }
   },
   /*otp verification form loading and verification */
   otpform: (req, res) => {
-    try{
+    try {
       res.render("user/opt-verification");
-      
-    }catch (err){
-      console.log(err + "error while loading otp form")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while loading otp form");
+      res.status(500).render("404");
     }
   },
   otpverification: async (req, res) => {
-    try{
-  
+    try {
       const { otp } = req.body;
-  
+
       const pin = otp.join("");
-  
+
       const mobileNo = req.session.userPhone;
       await twilio.verifyOtp(mobileNo, pin).then(() => {
         res.redirect("/");
       });
-      
-    }catch (err){
-      console.log(err + "error while otp verification")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while otp verification");
+      res.status(500).render("404");
     }
   },
   /*user logout  */
   userLogout: (req, res) => {
-    try{
+    try {
       req.session.userPhone = null;
       res.redirect("/");
-      
-    }catch (err){
-      console.log(err + "error while logout user")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while logout user");
+      res.status(500).render("404");
     }
   },
   /*product full view */
   productFullView: async (req, res) => {
-    try{
+    try {
       const id = req.params.id;
-      let data =  await userHelpers.viewProduct(id)
-        let india = new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: "INR",
-        });
-        let newprice = india.format(data[0].price);
-  
-     
-        let userId = req.session.user
-        let cartWishlistCounts = await userHelpers.getCartCount(userId)
-        let {cartCount ,wishlistCount } = cartWishlistCounts
-        res.render("user/product-full-view", { array: data, newprice , cartCount, wishlistCount});
-    
-      
-    }catch (err){
-      console.log(err + "error while loading produt full view page")
-      res.status(500).render('404')
+      let data = await userHelpers.viewProduct(id);
+      let india = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+      });
+      let newprice = india.format(data[0].price);
+
+      let userId = req.session.user;
+      let cartWishlistCounts = await userHelpers.getCartCount(userId);
+      let { cartCount, wishlistCount } = cartWishlistCounts;
+      res.render("user/product-full-view", {
+        array: data,
+        newprice,
+        cartCount,
+        wishlistCount,
+      });
+    } catch (err) {
+      console.log(err + "error while loading produt full view page");
+      res.status(500).render("404");
     }
   },
   /*cart page  */
   viewCart: async (req, res) => {
-    try{
+    try {
       const userId = req.session.user;
-      let cartWishlistCounts = await userHelpers.getCartCount(userId)
-      let {cartCount ,wishlistCount } = cartWishlistCounts
+      let cartWishlistCounts = await userHelpers.getCartCount(userId);
+      let { cartCount, wishlistCount } = cartWishlistCounts;
       let cartItems = await userHelpers.getCartProduct(userId);
       let india = new Intl.NumberFormat("en-IN", {
         style: "currency",
@@ -294,7 +289,7 @@ module.exports = {
       const Gtotal = cartItems[0]?.total;
       const carId = cartItems[0]?._id;
       const total = india.format(cartItems[0]?.total);
-  
+
       cartItems = cartItems[0]?.products;
       let price = [];
       let subtotals = [];
@@ -304,9 +299,9 @@ module.exports = {
         price.push(newprice);
         subtotals.push(subtotal);
       }
-  
+
       let coupons = await userHelpers.getUserCoupons(userId);
-  
+
       res.render("user/cart-page", {
         cartCount,
         wishlistCount,
@@ -319,109 +314,101 @@ module.exports = {
         Gtotal,
         coupons,
       });
-    }catch (err){
-      console.log(err + "error while loading view cart page")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while loading view cart page");
+      res.status(500).render("404");
     }
   },
   /*product add to the cart */
   AddtoCart: (req, res) => {
-    try{
+    try {
       const productId = req.params.id;
       const userId = req.session.user;
       userHelpers.addtoCart(productId, userId).then((response) => {
         res.json({ status: true });
       });
-      
-    }catch (err){
-      console.log(err + "error while add to cart")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while add to cart");
+      res.status(500).render("404");
     }
   },
   /*user account page */
   userAccount: async (req, res) => {
-    try{
+    try {
+      let userId = req.session.user;
+      let cartWishlistCounts = await userHelpers.getCartCount(userId);
+      let { cartCount, wishlistCount } = cartWishlistCounts;
 
-      let userId = req.session.user
-      let cartWishlistCounts = await userHelpers.getCartCount(userId)
-      let {cartCount ,wishlistCount } = cartWishlistCounts
-      
       let india = new Intl.NumberFormat("en-IN", {
         style: "currency",
         currency: "INR",
       });
-  
-     let response = await userHelpers.getAddress(userId)
-        const { address, userDetails, orderDetails } = response;
-  
-        let ordertotal = [];
-        for (let i = 0; i < orderDetails.length; i++) {
-          let val = india.format(orderDetails[i].total);
-          ordertotal.push(val);
-        }
-  
-        res.render("user/user-account-page", {
-          address: address,
-          userData: userDetails,
-          orderDetails: orderDetails,
-          ordertotal,
-          cartCount,
-          wishlistCount
-        });
-      
-    }catch (err){
-      console.log(err + "error while loading user Account page")
-      res.status(500).render('404')
+
+      let response = await userHelpers.getAddress(userId);
+      const { address, userDetails, orderDetails } = response;
+
+      let ordertotal = [];
+      for (let i = 0; i < orderDetails.length; i++) {
+        let val = india.format(orderDetails[i].total);
+        ordertotal.push(val);
+      }
+
+      res.render("user/user-account-page", {
+        address: address,
+        userData: userDetails,
+        orderDetails: orderDetails,
+        ordertotal,
+        cartCount,
+        wishlistCount,
+      });
+    } catch (err) {
+      console.log(err + "error while loading user Account page");
+      res.status(500).render("404");
     }
   },
   /*user change the quantity of a product in the cart*/
-  changeCartProductQuantity:  (req, res) => {
-    try{
-      
+  changeCartProductQuantity: (req, res) => {
+    try {
       let { i } = req.body;
       userHelpers.changeCartQuantity(req.body).then(async (response) => {
-        response.total = await userHelpers.findTotalAmout(req.body.userId); 
+        response.total = await userHelpers.findTotalAmout(req.body.userId);
         // response.subtotal = subtotal
         res.json(response);
       });
-    }catch (err){
-      console.log(err + "error while changeCart Product Quantity")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log(err + "error while changeCart Product Quantity");
+      res.status(500).render("404");
     }
   },
   /*user delete the product from cart */
   deleteCartItem: async (req, res) => {
-    try{
-     await userHelpers.deleteCartItem(req.body)
-        res.json({ status: true }); 
-    }catch (err){
-      console.log(err + "error while deleteCart")
-      res.status(500).render('404')
+    try {
+      await userHelpers.deleteCartItem(req.body);
+      res.json({ status: true });
+    } catch (err) {
+      console.log(err + "error while deleteCart");
+      res.status(500).render("404");
     }
   },
   /*user address adding */
   addressAdd: async (req, res) => {
-    try{
-      
+    try {
       req.body.userId = req.session.user;
-      
-      const {from } = req.query
-     
-     
-  
-    let response = await  userHelpers.addressAdd(req.body)
-    
-        if (response) {
-          if(from === 'Home'){
-            res.redirect("/userAccount");
-          }else{
-            res.redirect('/proceed-to-checkout')
-          }
+
+      const { from } = req.query;
+
+      let response = await userHelpers.addressAdd(req.body);
+
+      if (response) {
+        if (from === "Home") {
+          res.redirect("/userAccount");
+        } else {
+          res.redirect("/proceed-to-checkout");
         }
-   
-    }catch (err){
-      console.log(err + "error while address add")
-      res.status(500).render('404')
+      }
+    } catch (err) {
+      console.log(err + "error while address add");
+      res.status(500).render("404");
     }
   },
   /*user address delete */
@@ -435,20 +422,20 @@ module.exports = {
   },
   /*proceed to checkout page or order confirm page  */
   proceedToCheckout: async (req, res) => {
-    try{
+    try {
       let india = new Intl.NumberFormat("en-IN", {
         style: "currency",
         currency: "INR",
       });
       const userId = req.session.user;
-      let walletAmount = await userHelpers.getWallet(userId)
-      walletAmount = india.format(walletAmount[0]?.amount)
+      let walletAmount = await userHelpers.getWallet(userId);
+      walletAmount = india.format(walletAmount[0]?.amount);
       let cartItems = await userHelpers.getCartProduct(userId);
       const carId = cartItems[0]._id;
       const total = india.format(cartItems[0].total);
       const GrandTotal = india.format(req.session.discountPrice);
-      let cartWishlistCounts = await userHelpers.getCartCount(userId)
-      let {cartCount ,wishlistCount } = cartWishlistCounts
+      let cartWishlistCounts = await userHelpers.getCartCount(userId);
+      let { cartCount, wishlistCount } = cartWishlistCounts;
       cartItems = cartItems[0].products;
       let price = [];
       let subtotals = [];
@@ -458,10 +445,10 @@ module.exports = {
         price.push(newprice);
         subtotals.push(subtotal);
       }
-  
+
       userHelpers.getAddress(userId).then((response) => {
         const { address, userDetails } = response;
-  
+
         res.render("user/order-confirm-page", {
           cartCount,
           wishlistCount,
@@ -474,13 +461,13 @@ module.exports = {
           price,
           subtotals,
           walletAmount,
-          total : cartItems[0].total,
-          Dtotal: req.session.discountPrice
+          total: cartItems[0].total,
+          Dtotal: req.session.discountPrice,
         });
       });
-    }catch (err){
-      console.log("Error while loading prodceed to checkout page")
-      res.status(500).render('404')
+    } catch (err) {
+      console.log("Error while loading prodceed to checkout page");
+      res.status(500).render("404");
     }
   },
   /*place order and payment */
@@ -488,8 +475,6 @@ module.exports = {
     let { address, payment } = req.body;
     const userId = req.session.user;
 
-    
-   
     let cartItems = await userHelpers.getCartProduct(userId);
 
     let total = cartItems[0]?.total;
@@ -497,16 +482,15 @@ module.exports = {
 
     if (req.session.discountPrice) {
       total = req.session.discountPrice;
-
-    }else{
-      req.session.couponCode = null
+    } else {
+      req.session.couponCode = null;
     }
 
     //change coupon status
 
-    if(req.session.couponCode){
+    if (req.session.couponCode) {
       let code = req.session.couponCode;
-      await userHelpers.changeCouponStatus(code)
+      await userHelpers.changeCouponStatus(code);
     }
 
     const obj = {
@@ -515,11 +499,11 @@ module.exports = {
       paymentMethod: payment,
       total: total,
       items: cartItems.length,
-      status : 'placed',
+      status: "placed",
       products: cartItems,
-      date: new Date()
+      date: new Date(),
     };
-  
+
     let result = await userHelpers.orderRecords(obj);
     if (result) {
       req.session.recentOrderId = result.insertedId;
@@ -530,7 +514,7 @@ module.exports = {
         await couponGenerator.couponGenerator(userId);
         res.json({ status: "COD", coupon: true });
         // res.redirect('/order-success-page')
-      } else if(payment === 'UPI'){
+      } else if (payment === "UPI") {
         // res.json({status: 'UPI'})
         let totalAmout = parseInt(total);
         razorpay
@@ -541,31 +525,29 @@ module.exports = {
             await couponGenerator.couponGenerator(userId);
             res.json({ order, status: "UPI", coupon: true });
           });
-      }else if(payment === 'WALLET'){
-         let totalAmount = parseInt(total)
-         let userId = req.session.user
+      } else if (payment === "WALLET") {
+        let totalAmount = parseInt(total);
+        let userId = req.session.user;
         //wallet authentication and query
 
-        let result = await userHelpers.WalletCheck(userId , totalAmount)
-        if(result.status){
-          result.status = 'WALLET'
+        let result = await userHelpers.WalletCheck(userId, totalAmount);
+        if (result.status) {
+          result.status = "WALLET";
           await couponGenerator.couponGenerator(userId);
-          res.status(200).json(result)
-        }else{
-          res.status(403).json(result)
+          res.status(200).json(result);
+        } else {
+          res.status(403).json(result);
         }
-
       }
 
       // res.redirect('/order-success-page')
-    
-  }
+    }
   },
   /*order success page  */
   orderSuccessPage: async (req, res) => {
-    let userId = req.session.user
-    let cartWishlistCounts = await userHelpers.getCartCount(userId)
-    let {cartCount ,wishlistCount } = cartWishlistCounts
+    let userId = req.session.user;
+    let cartWishlistCounts = await userHelpers.getCartCount(userId);
+    let { cartCount, wishlistCount } = cartWishlistCounts;
     let india = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
@@ -573,8 +555,7 @@ module.exports = {
 
     let orderId = req.session.recentOrderId;
     let GrandTotal = india.format(req.session.discountPrice);
-    req.session.discountPrice = null
-    
+    req.session.discountPrice = null;
 
     let recentOrder = await userHelpers.recentOrder(orderId);
 
@@ -595,24 +576,20 @@ module.exports = {
   },
   /*order canceled by user */
   orderCanceled: (req, res) => {
-    const { orderId} = req.body
+    const { orderId } = req.body;
 
-   
     userHelpers.orderStatus(orderId).then((response) => {
       if (response) {
         res.json({ status: true });
       }
     });
   },
-/*verify payment */
+  /*verify payment */
   verifyPayment: (req, res) => {
-
-
     userHelpers
       .verifypayment(req.body)
       .then(() => {
         userHelpers.changePaymentStatus(req.session.recentOrderId).then(() => {
-         
           res.json({ status: true });
         });
       })
@@ -620,11 +597,10 @@ module.exports = {
         res.json({ status: false });
       });
   },
-/*user change name */
+  /*user change name */
   changeName: async (req, res) => {
     const userId = req.body.id;
     const newName = req.body.newName;
-  
 
     let result = await userHelpers.changeName(userId, newName);
     if (result) {
@@ -633,7 +609,7 @@ module.exports = {
       res.json({ status: false });
     }
   },
-/*dowmload order invoice */
+  /*dowmload order invoice */
   downloadInvoice: async (req, res) => {
     const { format, orderId } = req.body;
     // Check if format field is present
@@ -645,20 +621,18 @@ module.exports = {
     try {
       recentOrder = await userHelpers.recentOrder(orderId);
     } catch (err) {
-    
       return res.status(500).send("Error calculating sales data");
     }
     try {
       // Convert the report into the selected file format and get the name of the generated file
       const reportFile = await generateReport(format, recentOrder, "invoice");
-    
+
       // Set content type and file extension based on format
       let contentType, fileExtension;
       if (format === "pdf") {
         contentType = "application/pdf";
         fileExtension = "pdf";
       } else if (format === "excel") {
-       
         contentType =
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         fileExtension = "xlsx";
@@ -674,7 +648,6 @@ module.exports = {
       const fileStream = fs.createReadStream(reportFile);
       fileStream.pipe(res);
       fileStream.on("end", () => {
-        
         // Remove the file from the server
         fs.unlink(reportFile, (err) => {
           if (err) {
@@ -687,7 +660,7 @@ module.exports = {
       return res.status(500).send("Error generating report");
     }
   },
-/* view order details*/
+  /* view order details*/
   viewOrderDetails: async (req, res) => {
     let orderId = req.params.id;
     let orderDet = await userHelpers.getOrderDetails(orderId);
@@ -697,15 +670,13 @@ module.exports = {
     let userDetails = await userHelpers.getUserDetails(userId);
     let addressDetails = await userHelpers.getOrderAddress(addressId);
 
- 
     let product = orderDet[0].products;
- 
 
     // ajax response here
     res.json({ product, addressDetails, orderDet });
     // res.render('admin/singleOrderDetails',{product, addressDetails, orderDetails })
   },
-/* view wishlist */
+  /* view wishlist */
   viewWishlist: async (req, res) => {
     let userId = req.session.user;
     let result = await userHelpers.getWishList(userId);
@@ -725,18 +696,16 @@ module.exports = {
 
     res.render("user/wishlist", { products, price });
   },
-/* product added to wishlist */
+  /* product added to wishlist */
   AddtoWishlist: async (req, res) => {
     let productId = req.params.id;
     let userId = req.session.user;
-
-  
 
     await userHelpers.AddtoWishlist(productId, userId);
 
     res.json({ status: true });
   },
-/* delete wishlist item */
+  /* delete wishlist item */
   deleteWishlistItem: async (req, res) => {
     const { proId } = req.body;
     const userId = req.session.user;
@@ -744,7 +713,7 @@ module.exports = {
     await userHelpers.deleteWishlistItem(proId, userId);
     res.json({ status: true });
   },
-/* view coupons  */
+  /* view coupons  */
   viewCoupons: async (req, res) => {
     // render user coupons page
     const userId = req.session.user;
@@ -752,7 +721,7 @@ module.exports = {
 
     res.render("user/user-coupons", { result });
   },
-/* user appied coupon */
+  /* user appied coupon */
   couponSubmit: async (req, res) => {
     const userId = req.session.user;
     const { couponCode, total } = req.body;
@@ -761,14 +730,12 @@ module.exports = {
     if (!result) {
       res.json({ status: "Invalid Coupon" });
     } else {
-   
-
       let { percentage } = result;
       let amount = (total / 100) * percentage;
       // let amount = (total * percentage)/100;
       amount = total - amount;
       req.session.discountPrice = amount;
-      req.session.couponCode = couponCode
+      req.session.couponCode = couponCode;
 
       let india = new Intl.NumberFormat("en-IN", {
         style: "currency",
@@ -784,83 +751,75 @@ module.exports = {
     }
   },
   /* view wallet */
-  userWallet: async(req,res)=>{
+  userWallet: async (req, res) => {
     let india = new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
     });
 
-    const userId = req.session.user
-    let userWallet = await userHelpers.userWallet(userId)
-  
-    
-    const amount = india.format(userWallet[0]?.amount)
-    const transaction = userWallet[0]?.Transaction
-    
-    let total = []
-    for(let i=0; i < transaction?.length ; i++){
-     let price = india.format(transaction[i]?.amount)
-     total.push(price)
-    }
-    let transactionDates = []
+    const userId = req.session.user;
+    let userWallet = await userHelpers.userWallet(userId);
 
-     for(let j=0; j < transaction?.length; j++){
+    const amount = india.format(userWallet[0]?.amount);
+    const transaction = userWallet[0]?.Transaction;
+
+    let total = [];
+    for (let i = 0; i < transaction?.length; i++) {
+      let price = india.format(transaction[i]?.amount);
+      total.push(price);
+    }
+    let transactionDates = [];
+
+    for (let j = 0; j < transaction?.length; j++) {
       let date = new Date(transaction[j]?.date);
 
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let year = date.getFullYear();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      let year = date.getFullYear();
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let ampm = hours >= 12 ? "PM" : "AM";
 
-// Convert 24-hour time to 12-hour time
-  let shortHours = hours % 12;
-  shortHours = shortHours ? shortHours : 12; // Handle midnight (0:00) and noon (12:00)
+      // Convert 24-hour time to 12-hour time
+      let shortHours = hours % 12;
+      shortHours = shortHours ? shortHours : 12; // Handle midnight (0:00) and noon (12:00)
 
-  const shortForm = `${month}/${day}/${year}, ${shortHours}:${minutes} ${ampm}`;
-  transactionDates.push(shortForm)
+      const shortForm = `${month}/${day}/${year}, ${shortHours}:${minutes} ${ampm}`;
+      transactionDates.push(shortForm);
+    }
 
-   }
-   
-
-  
-
-    res.render('user/userWallet',{amount, transaction,total , date : transactionDates})
+    res.render("user/userWallet", {
+      amount,
+      transaction,
+      total,
+      date: transactionDates,
+    });
   },
 
   /*refund request */
-  refundRequest : async (req,res)=>{
-  
-
-    const {orderId, amount }= req.body
-    const userId = req.session.user
+  refundRequest: async (req, res) => {
+    const { orderId, amount } = req.body;
+    const userId = req.session.user;
     const obj = {
       userId,
       orderId,
       amount,
-      status : 'pending'
-    }
+      status: "pending",
+    };
 
-   await userHelpers.refundRequest(obj)
-   
-    res.json({status :true})
-   
+    await userHelpers.refundRequest(obj);
 
-
+    res.json({ status: true });
   },
 
-  checkWalletBalance : async (req,res)=>{
-    const userId = req.session.user
+  checkWalletBalance: async (req, res) => {
+    const userId = req.session.user;
 
-    let walletData = await userHelpers.getWallet(userId)
-    if(walletData?.length){
-      res.json({status : true, Balance : walletData[0]?.amount})
-    }else{
-      res.json({status : false})
+    let walletData = await userHelpers.getWallet(userId);
+    if (walletData?.length) {
+      res.json({ status: true, Balance: walletData[0]?.amount });
+    } else {
+      res.json({ status: false });
     }
-
-
-  }
-  
+  },
 };
